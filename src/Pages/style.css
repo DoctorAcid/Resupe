@@ -1,0 +1,17 @@
+.content{
+    opacity: 0;
+    top: -56px;
+}
+
+.main-enter-active {
+    position: relative;
+    opacity: 1;
+    top: 0;
+}
+
+.main-enter-done{
+    position: relative;
+    opacity: 1;
+    top: 0;
+}
+
