@@ -73,12 +73,6 @@ const MainContainer = () => {
     }
   });
 
-  useEffect(() => {
-    if (largeInput.current) {
-      largeInput.current.style.opacity = "1";
-    }
-  });
-
   const handleClick = () => {
     setClicked(true);
     setInputFields([...inputFields, inputFields.length]);
@@ -96,6 +90,14 @@ const MainContainer = () => {
         addTaskButt.current.style.position = "relative";
         addTaskButt.current.style.height = "104px";
         addTaskButt.current.style.right = "0";
+      }
+
+      if (topSection.current) {
+        topSection.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
+        });
       }
     }
   };
