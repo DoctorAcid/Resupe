@@ -138,13 +138,6 @@ const Main = () => {
   });
 
   useEffect(() => {
-    if (topPosition === 0 && appWrap.current && contentWrap.current) {
-      appWrap.current.style.justifyContent = "center";
-      contentWrap.current.style.top = "0px";
-    }
-  });
-
-  useEffect(() => {
     if (
       mainWrap.current &&
       appWrap.current &&
