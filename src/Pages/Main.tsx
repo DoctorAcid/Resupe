@@ -24,9 +24,11 @@ const Wrapper = styled.div`
   align-items: center;
   width: 800px;
   max-width: 90%;
+  margin-left: -128px;
   opacity: 0;
   transition: opacity ease-in 0.3s;
   @media (max-width: 742px) {
+    margin-left: 0px;
     .shiftTitle {
       flex-direction: column;
       gap: 8px;
@@ -48,11 +50,10 @@ const LargeButton = styled.div`
     transform: scale(1.1);
     background-color: #d9dee2;
     box-shadow: 8px 8px 40px 0px #0000000d;
-    border: 2px solid #6d7378;
   }
 
   &:hover svg path {
-    fill: #6d7378;
+    fill: #fff;
   }
 `;
 
@@ -70,7 +71,6 @@ const BottomSection = styled(Column)`
 const ContentWrap = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 48px;
   justify-content: center;
   align-items: center;
   padding: 128px 0;
@@ -78,7 +78,31 @@ const ContentWrap = styled.div`
 
 const Content = styled.div`
   display: flex;
+  align-items: center;
+  padding: 48px 0;
   transition: all ease-in 0.3s;
+`;
+
+const DeleteButton = styled.div`
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  width: 64px;
+  height: 64px;
+  left: 64px;
+  background-color: #f1f3f3;
+  border-radius: 32px;
+  transition: all ease-in 0.3s;
+  z-index: 1;
+  &:hover {
+    background-color: #fff;
+  }
+
+  &:hover svg path {
+    fill: red;
+    transition: all ease-in 0.3s;
+  }
 `;
 
 const Main = () => {
@@ -92,6 +116,8 @@ const Main = () => {
   const newEntry = useRef<HTMLDivElement>(null);
   const [entry, setEntry] = useState([0]);
   const [clicked, setClicked] = useState(false);
+  const [topPosition, setTopPosition] = useState(0);
+  const [wrapHeight, setWrapHeight] = useState(0);
 
   useEffect(() => {
     if (mainWrap.current) {
@@ -103,6 +129,20 @@ const Main = () => {
     setEntry([...entry, entry.length]);
     setClicked(true);
   };
+
+  useEffect(() => {
+    if (topPosition === 1 && appWrap.current && contentWrap.current) {
+      appWrap.current.style.justifyContent = "flex-start";
+      contentWrap.current.style.top = "160px";
+    }
+  });
+
+  useEffect(() => {
+    if (topPosition === 0 && appWrap.current && contentWrap.current) {
+      appWrap.current.style.justifyContent = "center";
+      contentWrap.current.style.top = "0px";
+    }
+  });
 
   useEffect(() => {
     if (
@@ -155,6 +195,22 @@ const Main = () => {
     }
   });
 
+  const removeContent = (index: number) => {
+    setEntry(entry.filter((field, i) => i !== index));
+    if (entry.length < 3) {
+      setEntry([0]);
+    }
+
+    if (mainWrap.current && appWrap.current && contentWrap.current) {
+      const wrapHeight = mainWrap.current.offsetHeight;
+      if (wrapHeight > 160) {
+        appWrap.current.style.justifyContent = "center";
+        contentWrap.current.style.top = "0px";
+      }
+      setWrapHeight(wrapHeight);
+    }
+  };
+
   return (
     <Wrap ref={appWrap}>
       <Wrapper ref={mainWrap}>
@@ -165,8 +221,12 @@ const Main = () => {
             {entry.map((index) => {
               if (index === 0) {
                 return (
-                  <Content>
-                    <MainContainer />
+                  <Content key={index}>
+                    <MainContainer
+                      titleOpacity={true}
+                      setTopPosition={setTopPosition}
+                      wrapHeight={wrapHeight}
+                    />
                   </Content>
                 );
               }
@@ -177,8 +237,31 @@ const Main = () => {
                   classNames="main"
                   key={index}
                 >
-                  <Content className="content" ref={newEntry}>
-                    <MainContainer />
+                  <Content
+                    className="content mainContent"
+                    ref={newEntry}
+                    key={index}
+                  >
+                    <DeleteButton onClick={() => removeContent(index)}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="22"
+                        viewBox="0 0 18 22"
+                      >
+                        <path
+                          id="Union_11"
+                          data-name="Union 11"
+                          d="M3.286,22a2,2,0,0,1-2-2V5.5H16.715V20a2,2,0,0,1-2,2ZM12.215,8.893v9.715a.643.643,0,1,0,1.285,0V8.893a.643.643,0,1,0-1.285,0Zm-3.857,0v9.715a.643.643,0,0,0,1.286,0V8.893a.643.643,0,0,0-1.286,0Zm-3.857,0v9.715a.643.643,0,0,0,1.286,0V8.893a.643.643,0,0,0-1.286,0ZM0,4.125v-.75a2,2,0,0,1,2-2H6.429A1.375,1.375,0,0,1,7.8,0H10.2a1.375,1.375,0,0,1,1.375,1.375H16a2,2,0,0,1,2,2v.75Z"
+                          fill="#d9dee2"
+                        />
+                      </svg>
+                    </DeleteButton>
+                    <MainContainer
+                      setTopPosition={setTopPosition}
+                      titleOpacity={false}
+                      wrapHeight={wrapHeight}
+                    />
                   </Content>
                 </CSSTransition>
               );

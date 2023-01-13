@@ -8,6 +8,7 @@ interface Props {
   width?: string;
   justify?: "sb" | "fe" | "c";
   align?: "sb" | "fs" | "fe";
+  titleOpacity: boolean;
 }
 
 const Wrapper = styled.div<{
@@ -16,6 +17,7 @@ const Wrapper = styled.div<{
   width?: string;
   justify?: "sb" | "fe" | "c";
   align?: "sb" | "fs" | "fe";
+  opacity?: boolean;
 }>`
   display: flex;
   flex-direction: ${({ flex }) => (flex ? flex : "row")};
@@ -33,10 +35,13 @@ const Wrapper = styled.div<{
     (justify ? justify : "flex-start")};
   min-width: ${({ width }) => (width ? width : "160px")};
   width: ${({ width }) => (width ? width : "160px")};
+  opacity: ${({ opacity }) => (opacity && 1) || (!opacity && 0)};
   @media (max-width: 742px) {
     min-width: fit-content;
     width: fit-content;
     text-align: left;
+    margin-left: 14px;
+    display: ${({ opacity }) => (opacity && "flex") || (!opacity && "none")};
   }
 `;
 
@@ -81,6 +86,7 @@ const TitleTag = ({
   width,
   justify,
   align,
+  titleOpacity,
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const popup = useRef<HTMLDivElement>(null);
@@ -113,6 +119,7 @@ const TitleTag = ({
       width={width}
       justify={justify}
       align={align}
+      opacity={titleOpacity}
     >
       <h3>{title}</h3>
       <Hint ref={ref}>

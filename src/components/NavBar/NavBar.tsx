@@ -7,8 +7,13 @@ const NavWrap = styled.div`
   height: 64px;
   position: absolute;
   align-items: center;
+  left: 0;
   top: 0;
   padding: 0 64px;
+
+  @media (max-width: 640px) {
+    padding: 24px;
+  }
 `;
 
 const NavBar = () => {

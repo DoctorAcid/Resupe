@@ -6,7 +6,6 @@
     padding: 0;
     font-family: roboto, sans-serif;
     color: #6D7378;
-    transition: all ease-in 0.3s;
 }
 
 body {
@@ -38,17 +37,17 @@ h3 {
 ::-webkit-scrollbar {
     height: 6px;
     width: 4px;
-  }
+}
   
-  ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     margin-block: 0.5em;
     border-radius: 6px;
     background: transparent;
-  }
+}
   
-  ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background: #adb5bd;
     border-radius: 6px;
     cursor: pointer;
-  }
+}
   

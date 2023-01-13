@@ -6,6 +6,12 @@ import { Row } from "../Containers/Row";
 import { Input, LargeInput } from "../Inputs/inputs";
 import TitleTag from "../TitleTag/TitleTag";
 
+interface Props {
+  setTopPosition: React.Dispatch<React.SetStateAction<number>>;
+  titleOpacity: boolean;
+  wrapHeight: number;
+}
+
 const AddTasks = styled.div`
   position: absolute;
   display: flex;
@@ -22,12 +28,12 @@ const AddTasks = styled.div`
   transition: all ease-in 0.3s;
   &:hover {
     border: 2px solid #6d7378;
-    background-color: #d9dee2;
     box-shadow: 8px 8px 40px 0px #0000000d;
-    transform: scale(1.04);
+    transform: scale(1.02);
   }
 
   &:hover svg path {
+    transition: all ease-in 0.3s;
     fill: #6d7378;
   }
 `;
@@ -52,7 +58,7 @@ const TopSection = styled(Column)`
   gap: 8px;
 `;
 
-const MainContainer = () => {
+const MainContainer = ({ setTopPosition, titleOpacity, wrapHeight }: Props) => {
   const addTask = useRef<HTMLDivElement>(null);
   const addButt = useRef<HTMLDivElement>(null);
   const submitText = useRef<HTMLDivElement>(null);
@@ -63,6 +69,7 @@ const MainContainer = () => {
   const topSection = useRef<HTMLDivElement>(null);
   const [inputFields, setInputFields] = useState([0]);
   const [clicked, setClicked] = useState(false);
+  const [lInputHeight, setLInputHeight] = useState(true);
 
   useEffect(() => {
     if (textArea.current && clicked && inputFields.length > 2) {
@@ -75,6 +82,7 @@ const MainContainer = () => {
 
   const handleClick = () => {
     setClicked(true);
+
     setInputFields([...inputFields, inputFields.length]);
     if (inputFields.length > 0) {
       if (textArea.current) {
@@ -93,6 +101,13 @@ const MainContainer = () => {
       }
 
       if (topSection.current) {
+        const contPosition = topSection.current.getBoundingClientRect().top;
+        if (contPosition < 160) {
+          setTopPosition(1);
+        }
+      }
+
+      if (topSection.current) {
         topSection.current.scrollIntoView({
           behavior: "smooth",
           block: "center",
@@ -100,6 +115,7 @@ const MainContainer = () => {
         });
       }
     }
+    setLInputHeight(false);
   };
 
   useEffect(() => {
@@ -132,59 +148,106 @@ const MainContainer = () => {
     }
   });
 
+  const removeInput = (index: number) => {
+    setInputFields(inputFields.filter((field, i) => i !== index));
+    if (addTaskButt.current && inputFields.length < 4) {
+      addTaskButt.current.style.height = "104px";
+    }
+    if (addTaskButt.current && inputFields.length < 3) {
+      addTaskButt.current.style.position = "absolute";
+      addTaskButt.current.style.height = "88px";
+      addTaskButt.current.style.right = "7px";
+      setLInputHeight(true);
+    }
+
+    if (topSection.current) {
+      if (wrapHeight > 250) {
+        setTopPosition(0);
+        console.log("got here");
+      }
+    }
+  };
+
   return (
     <TopSection ref={topSection}>
       <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
         <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
-          <TitleTag justify="fe" title="Job Lists" />
+          <TitleTag
+            justify="fe"
+            title="Job Lists"
+            titleOpacity={titleOpacity}
+          />
           <Input placeholder="Job List..." />
         </Row>
 
         <Row gap="sm" style={{ flex: "1" }}>
           <Column gap="sm">
-            <TitleTag title="Start Date" marginLeft="14px" />
-            <Input type={"date"} />
+            <TitleTag
+              title="Start Date"
+              marginLeft="14px"
+              titleOpacity={titleOpacity}
+            />
+            <Input type={"date"} placeholder="__/__/___" />
           </Column>
 
           <Column gap="sm">
-            <TitleTag title="End Date" marginLeft="14px" />
-            <Input className="smallInput" type={"date"} />
+            <TitleTag
+              title="End Date"
+              marginLeft="14px"
+              titleOpacity={titleOpacity}
+            />
+            <Input
+              className="smallInput"
+              type={"date"}
+              placeholder="__/__/___"
+            />
           </Column>
         </Row>
       </Row>
 
       <Row className="shiftTitle" align="fs" justify="c" gap="md">
-        <TitleTag align="fs" title="Tasks, Responsibilities,& Achievements" />
+        <TitleTag
+          align="fs"
+          title="Tasks, Responsibilities,& Achievements"
+          titleOpacity={titleOpacity}
+        />
         <Row gap="sm">
           <TransitionGroup style={{ width: "100%" }}>
             <Row ref={textArea}>
               {inputFields.map((field, index) => {
                 if (index === 0) {
                   return (
-                    <InputContaner>
+                    <InputContaner key={index}>
                       <LargeInput
                         ref={largeInput}
-                        key={index}
                         placeholder="text here..."
                         style={{
-                          height: "104px",
+                          height: lInputHeight ? "104px" : "48px",
                         }}
                       />
                     </InputContaner>
                   );
                 }
                 return (
-                  <CSSTransition in={clicked} timeout={300} classNames="main">
+                  <CSSTransition
+                    in={clicked}
+                    timeout={300}
+                    classNames="main"
+                    key={index}
+                  >
                     <InputContaner className="content">
                       <LargeInput
                         ref={largeInput}
                         key={index}
                         placeholder="text here..."
                         style={{
-                          height: "48px",
+                          height: lInputHeight ? "104px" : "48px",
                         }}
                       />
-                      <DeleteButton>
+                      <DeleteButton
+                        onClick={() => removeInput(index)}
+                        key={index}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="14"
@@ -228,6 +291,7 @@ const MainContainer = () => {
           align="fs"
           justify="fe"
           title="A Broad Sentence Describing The Role"
+          titleOpacity={titleOpacity}
         />
         <Input placeholder="Job List..." />
       </Row>

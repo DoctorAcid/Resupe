@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Input = styled.input`
+export const Input = styled("input")`
   width: 100%;
   height: 48px;
   padding: 12px 16px;
@@ -12,13 +12,11 @@ export const Input = styled.input`
   background-color: #f1f3f3;
   transition: all ease-in 0.3s;
   min-width: 128px;
+  ::placeholder {
+    color: #a9adb0;
+  }
   &:hover {
     border: 2px solid #6d7378;
-  }
-
-  &:focus {
-    background-color: #d9dee2;
-    border: 2px solid #d9dee2;
   }
 `;
 
@@ -35,12 +33,10 @@ export const LargeInput = styled.textarea`
   vertical-align: text-top;
   resize: none;
   transition: all ease-in 0.3s;
+  ::placeholder {
+    color: #a9adb0;
+  }
   &:hover {
     border: 2px solid #6d7378;
-  }
-
-  &:focus {
-    background-color: #d9dee2;
-    border: 2px solid #d9dee2;
   }
 `;
