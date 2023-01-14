@@ -7,6 +7,12 @@ import NavBar from "../components/NavBar/NavBar";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./style.css";
 
+interface IputItmes {
+  id: number;
+  name: string;
+  isVisible: boolean;
+}
+
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,7 +32,7 @@ const Wrapper = styled.div`
   max-width: 90%;
   margin-left: -128px;
   opacity: 0;
-  transition: opacity ease-in 0.3s;
+  transition: all ease-in 0.3s;
   @media (max-width: 742px) {
     margin-left: 0px;
     .shiftTitle {
@@ -105,6 +111,24 @@ const DeleteButton = styled.div`
   }
 `;
 
+const Popup = styled.div`
+  position: fixed;
+  bottom: 32px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 18px 8px 16px;
+  border-radius: 8px;
+  width: max-content;
+  background-color: #6d7378;
+  color: #fff;
+  font-size: 12px;
+  box-shadow: 8px 8px 40px 0px #0000000d;
+  opacity: 0;
+  transition: opacity ease-in 0.6s;
+`;
+
 const Main = () => {
   const addTask = useRef<HTMLDivElement>(null);
   const addButt = useRef<HTMLDivElement>(null);
@@ -114,7 +138,10 @@ const Main = () => {
   const appWrap = useRef<HTMLDivElement>(null);
   const contentWrap = useRef<HTMLDivElement>(null);
   const newEntry = useRef<HTMLDivElement>(null);
-  const [entry, setEntry] = useState([0]);
+  const popup = useRef<HTMLDivElement>(null);
+  const [entryInputs, setEntryInputs] = useState([
+    { id: 1, name: "input1", isVisible: false },
+  ]);
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(0);
   const [wrapHeight, setWrapHeight] = useState(0);
@@ -122,18 +149,6 @@ const Main = () => {
   useEffect(() => {
     if (mainWrap.current) {
       mainWrap.current.style.opacity = "1";
-    }
-  });
-
-  const handleEntry = () => {
-    setEntry([...entry, entry.length]);
-    setClicked(true);
-  };
-
-  useEffect(() => {
-    if (topPosition === 1 && appWrap.current && contentWrap.current) {
-      appWrap.current.style.justifyContent = "flex-start";
-      contentWrap.current.style.top = "160px";
     }
   });
 
@@ -148,7 +163,6 @@ const Main = () => {
 
       if (mWrap < 160) {
         appWrap.current.style.justifyContent = "flex-start";
-        contentWrap.current.style.top = "160px";
         newEntry.current.scrollIntoView({
           behavior: "smooth",
           block: "center",
@@ -158,48 +172,58 @@ const Main = () => {
     }
   });
 
-  useEffect(() => {
-    if (addButt.current) {
-      addButt.current.addEventListener("mouseover", () => {
-        if (addTask.current) {
-          addTask.current.style.opacity = "0";
-        }
-      });
-
-      addButt.current.addEventListener("mouseout", () => {
-        if (addTask.current) {
-          addTask.current.style.opacity = "1";
-        }
-      });
+  const handleEntry = () => {
+    setEntryInputs([
+      ...entryInputs,
+      {
+        id: entryInputs.length + 1,
+        name: "input" + String(entryInputs.length + 1),
+        isVisible: true,
+      },
+    ]);
+    setClicked(true);
+    if (addTask.current) {
+      addTask.current.style.opacity = "0";
     }
+  };
 
-    if (submitButt.current) {
-      submitButt.current.addEventListener("mouseover", () => {
-        if (submitText.current) {
-          submitText.current.style.opacity = "0";
-        }
-      });
-
-      submitButt.current.addEventListener("mouseout", () => {
-        if (submitText.current) {
-          submitText.current.style.opacity = "1";
-        }
-      });
+  const handleSubmit = () => {
+    if (submitText.current) {
+      submitText.current.style.opacity = "0";
     }
-  });
+  };
 
   const removeContent = (index: number) => {
-    setEntry(entry.filter((field, i) => i !== index));
-    if (entry.length < 3) {
-      setEntry([0]);
+    setEntryInputs(
+      entryInputs.map((input) => {
+        if (input.id === index) {
+          return { ...input, isVisible: false };
+        }
+        return input;
+      })
+    );
+
+    if (popup.current) {
+      popup.current.style.opacity = "1";
     }
 
-    if (mainWrap.current && appWrap.current && contentWrap.current) {
-      const wrapHeight = mainWrap.current.offsetHeight;
-      if (wrapHeight > 160) {
-        appWrap.current.style.justifyContent = "center";
-        contentWrap.current.style.top = "0px";
+    setTimeout(() => {
+      setEntryInputs(entryInputs.filter((i) => i.id !== index));
+    }, 300);
+
+    setTimeout(() => {
+      if (popup.current) {
+        popup.current.style.opacity = "0";
       }
+    }, 2000);
+
+    if (mainWrap.current && appWrap.current && entryInputs) {
+      const wrapHeight = mainWrap.current.offsetHeight;
+
+      if (wrapHeight < 1200) {
+        appWrap.current.style.justifyContent = "center";
+      }
+
       setWrapHeight(wrapHeight);
     }
   };
@@ -211,10 +235,10 @@ const Main = () => {
 
         <TransitionGroup>
           <ContentWrap ref={contentWrap}>
-            {entry.map((index) => {
-              if (index === 0) {
+            {entryInputs.map((index, i) => {
+              if (index.id === 1) {
                 return (
-                  <Content key={index}>
+                  <Content key={index.id}>
                     <MainContainer
                       titleOpacity={true}
                       setTopPosition={setTopPosition}
@@ -226,16 +250,19 @@ const Main = () => {
               return (
                 <CSSTransition
                   in={clicked}
-                  timeout={300}
+                  timeout={1000}
                   classNames="main"
-                  key={index}
+                  key={index.id}
                 >
                   <Content
                     className="content mainContent"
                     ref={newEntry}
-                    key={index}
+                    style={{
+                      opacity: index.isVisible ? "" : 0,
+                      marginTop: index.isVisible ? "0px" : "-300px",
+                    }}
                   >
-                    <DeleteButton onClick={() => removeContent(index)}>
+                    <DeleteButton onClick={() => removeContent(index.id)}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="18"
@@ -398,7 +425,11 @@ const Main = () => {
             </Row>
           </Column>
 
-          <LargeButton ref={submitButt} className="submitButton">
+          <LargeButton
+            ref={submitButt}
+            onClick={handleSubmit}
+            className="submitButton"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -416,6 +447,22 @@ const Main = () => {
           </LargeButton>
         </BottomSection>
       </Wrapper>
+      <Popup ref={popup}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+        >
+          <path
+            id="Union_12"
+            data-name="Union 12"
+            d="M0,9a9,9,0,1,1,9,9A9,9,0,0,1,0,9ZM2,9A7,7,0,1,0,9,2,7.008,7.008,0,0,0,2,9Zm6,4a1,1,0,1,1,1,1A1,1,0,0,1,8,13Zm0-3V5a1,1,0,1,1,2,0v5a1,1,0,1,1-2,0Z"
+            fill="#f1f3f3"
+          />
+        </svg>
+        Entry Removed!
+      </Popup>
     </Wrap>
   );
 };

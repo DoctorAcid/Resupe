@@ -6,6 +6,11 @@ import { Row } from "../Containers/Row";
 import { Input, LargeInput } from "../Inputs/inputs";
 import TitleTag from "../TitleTag/TitleTag";
 
+interface InputItems {
+  id: number;
+  name: string;
+}
+
 interface Props {
   setTopPosition: React.Dispatch<React.SetStateAction<number>>;
   titleOpacity: boolean;
@@ -29,7 +34,6 @@ const AddTasks = styled.div`
   &:hover {
     border: 2px solid #6d7378;
     box-shadow: 8px 8px 40px 0px #0000000d;
-    transform: scale(1.02);
   }
 
   &:hover svg path {
@@ -67,7 +71,10 @@ const MainContainer = ({ setTopPosition, titleOpacity, wrapHeight }: Props) => {
   const largeInput = useRef<HTMLTextAreaElement>(null);
   const addTaskButt = useRef<HTMLDivElement>(null);
   const topSection = useRef<HTMLDivElement>(null);
-  const [inputFields, setInputFields] = useState([0]);
+  const TAWrap = useRef<HTMLDivElement>(null);
+  const [inputFields, setInputFields] = useState<InputItems[]>([
+    { id: 1, name: "input1" },
+  ]);
   const [clicked, setClicked] = useState(false);
   const [lInputHeight, setLInputHeight] = useState(true);
 
@@ -83,7 +90,16 @@ const MainContainer = ({ setTopPosition, titleOpacity, wrapHeight }: Props) => {
   const handleClick = () => {
     setClicked(true);
 
-    setInputFields([...inputFields, inputFields.length]);
+    setInputFields([
+      ...inputFields,
+      { id: inputFields.length + 1, name: "input" + (inputFields.length + 1) },
+    ]);
+
+    if (TAWrap.current) {
+      if (inputFields.length > 0) {
+        TAWrap.current.style.alignItems = "flex-start";
+      }
+    }
     if (inputFields.length > 0) {
       if (textArea.current) {
         textArea.current.style.flexDirection = "column";
@@ -149,15 +165,22 @@ const MainContainer = ({ setTopPosition, titleOpacity, wrapHeight }: Props) => {
   });
 
   const removeInput = (index: number) => {
-    setInputFields(inputFields.filter((field, i) => i !== index));
+    setInputFields(inputFields.filter((i) => i.id !== index));
     if (addTaskButt.current && inputFields.length < 4) {
       addTaskButt.current.style.height = "104px";
     }
+
     if (addTaskButt.current && inputFields.length < 3) {
       addTaskButt.current.style.position = "absolute";
       addTaskButt.current.style.height = "88px";
       addTaskButt.current.style.right = "7px";
       setLInputHeight(true);
+    }
+
+    if (TAWrap.current) {
+      if (inputFields.length < 3) {
+        TAWrap.current.style.alignItems = "center";
+      }
     }
 
     if (topSection.current) {
@@ -211,16 +234,16 @@ const MainContainer = ({ setTopPosition, titleOpacity, wrapHeight }: Props) => {
           title="Tasks, Responsibilities,& Achievements"
           titleOpacity={titleOpacity}
         />
-        <Row gap="sm">
+        <Row gap="sm" ref={TAWrap}>
           <TransitionGroup style={{ width: "100%" }}>
             <Row ref={textArea}>
-              {inputFields.map((field, index) => {
-                if (index === 0) {
+              {inputFields.map((index) => {
+                if (index.id === 1) {
                   return (
-                    <InputContaner key={index}>
+                    <InputContaner key={index.id}>
                       <LargeInput
                         ref={largeInput}
-                        placeholder="text here..."
+                        placeholder={String(index.id) + " : " + index.name}
                         style={{
                           height: lInputHeight ? "104px" : "48px",
                         }}
@@ -233,21 +256,17 @@ const MainContainer = ({ setTopPosition, titleOpacity, wrapHeight }: Props) => {
                     in={clicked}
                     timeout={300}
                     classNames="main"
-                    key={index}
+                    key={index.id}
                   >
                     <InputContaner className="content">
                       <LargeInput
                         ref={largeInput}
-                        key={index}
-                        placeholder="text here..."
+                        placeholder={String(index.id) + " : " + index.name}
                         style={{
                           height: lInputHeight ? "104px" : "48px",
                         }}
                       />
-                      <DeleteButton
-                        onClick={() => removeInput(index)}
-                        key={index}
-                      >
+                      <DeleteButton onClick={() => removeInput(index.id)}>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="14"

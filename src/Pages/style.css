@@ -1,6 +1,7 @@
 .content{
     opacity: 0;
-    top: -56px;
+    top: -300px;
+    transition: all ease-in 1s;
 }
 
 .main-enter-active {
@@ -14,6 +15,16 @@
     opacity: 1;
     top: 0;
 }
+
+.main-exit{
+    opacity: 1;
+    margin-top: -104px;
+}
+
+.main-exit-active{
+    opacity: 0;
+}
+
 
 .mainContent::before {
     content: "";

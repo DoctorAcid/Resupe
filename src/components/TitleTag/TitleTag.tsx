@@ -17,7 +17,7 @@ const Wrapper = styled.div<{
   width?: string;
   justify?: "sb" | "fe" | "c";
   align?: "sb" | "fs" | "fe";
-  opacity?: boolean;
+  opacity?: string;
 }>`
   display: flex;
   flex-direction: ${({ flex }) => (flex ? flex : "row")};
@@ -35,7 +35,8 @@ const Wrapper = styled.div<{
     (justify ? justify : "flex-start")};
   min-width: ${({ width }) => (width ? width : "160px")};
   width: ${({ width }) => (width ? width : "160px")};
-  opacity: ${({ opacity }) => (opacity && 1) || (!opacity && 0)};
+  opacity: ${({ opacity }) =>
+    (opacity === "true" && 1) || (opacity === "false" && 0)};
   @media (max-width: 742px) {
     min-width: fit-content;
     width: fit-content;
@@ -113,13 +114,15 @@ const TitleTag = ({
     }
   });
 
+  const Opacity = String(titleOpacity);
+
   return (
     <Wrapper
       marginLeft={marginLeft}
       width={width}
       justify={justify}
       align={align}
-      opacity={titleOpacity}
+      opacity={Opacity}
     >
       <h3>{title}</h3>
       <Hint ref={ref}>
