@@ -22,7 +22,7 @@ export const Input = styled("input")`
 
 export const LargeInput = styled.textarea`
   width: 100%;
-  height: 104px;
+  height: 0px;
   padding: 12px 16px;
   border: 2px solid #d9dee2;
   border-radius: 28px;

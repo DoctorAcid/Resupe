@@ -42,7 +42,8 @@ const Wrapper = styled.div<{
     width: fit-content;
     text-align: left;
     margin-left: 14px;
-    display: ${({ opacity }) => (opacity && "flex") || (!opacity && "none")};
+    display: ${({ opacity }) =>
+      (opacity === "true" && "flex") || (opacity === "false" && "none")};
   }
 `;
 
