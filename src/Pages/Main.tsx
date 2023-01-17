@@ -7,12 +7,6 @@ import NavBar from "../components/NavBar/NavBar";
 import "./style.css";
 import { motion } from "framer-motion";
 
-interface IputItmes {
-  id: number;
-  name: string;
-  isVisible: boolean;
-}
-
 const Wrap = styled(motion.div)`
   display: flex;
   flex-direction: column;
