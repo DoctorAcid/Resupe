@@ -115,16 +115,6 @@ const MainContainer = ({ setTopPosition, titleOpacity }: Props) => {
   }
 
   useEffect(() => {
-    if (largeInput.current) {
-      largeInput.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    }
-  });
-
-  useEffect(() => {
     if (inputFields.length === 2) {
       if (textArea.current) {
         const inputWidth = textArea.current.offsetWidth;
@@ -157,6 +147,14 @@ const MainContainer = ({ setTopPosition, titleOpacity }: Props) => {
           setInputWidth("100%");
         }, 800);
       }
+    }
+
+    if (largeInput.current) {
+      largeInput.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
     }
   };
 

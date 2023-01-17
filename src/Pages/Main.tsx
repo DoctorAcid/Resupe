@@ -207,17 +207,6 @@ const Main = () => {
   const [popupText, setPopupText] = useState("");
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(false);
-  const [mainWrapHeight, setMainWrapHeight] = useState(false);
-
-  useEffect(() => {
-    if (newEntry.current) {
-      newEntry.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    }
-  });
 
   const handleEntry = () => {
     setClicked(true);
@@ -239,6 +228,14 @@ const Main = () => {
       if (WrapHeight > 1200) {
         setTopPosition(true);
       }
+    }
+
+    if (newEntry.current) {
+      newEntry.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
     }
   };
 
@@ -284,7 +281,7 @@ const Main = () => {
     <Wrap
       ref={appWrap}
       style={{
-        justifyContent: topPosition || mainWrapHeight ? "flex-start" : "center",
+        justifyContent: topPosition ? "flex-start" : "center",
       }}
     >
       <Wrapper animate={{ opacity: "1" }} ref={mainWrap}>
