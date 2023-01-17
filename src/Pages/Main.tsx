@@ -4,8 +4,8 @@ import { Column } from "../components/Containers/Column";
 import { Row } from "../components/Containers/Row";
 import MainContainer from "../components/MainContent/MainContainer";
 import NavBar from "../components/NavBar/NavBar";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "./style.css";
+import { motion } from "framer-motion";
 
 interface IputItmes {
   id: number;
@@ -13,7 +13,7 @@ interface IputItmes {
   isVisible: boolean;
 }
 
-const Wrap = styled.div`
+const Wrap = styled(motion.div)`
   display: flex;
   flex-direction: column;
   width: 100vw;
@@ -22,7 +22,7 @@ const Wrap = styled.div`
   align-items: center;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -32,7 +32,6 @@ const Wrapper = styled.div`
   max-width: 90%;
   margin-left: -128px;
   opacity: 0;
-  transition: all ease-in 0.3s;
   @media (max-width: 920px) {
     margin-left: -64px;
   }
@@ -46,7 +45,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const LargeButton = styled.div`
+const LargeButton = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,7 +54,6 @@ const LargeButton = styled.div`
   border-radius: 64px;
   background-color: #fff;
   border: 2px solid #d9dee2;
-  transition: all ease-in 0.3s;
   &:hover {
     transform: scale(1.1);
     background-color: #d9dee2;
@@ -92,7 +90,7 @@ const BottomSection = styled(Column)`
   }
 `;
 
-const ContentWrap = styled.div`
+const ContentWrap = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -103,18 +101,19 @@ const ContentWrap = styled.div`
   }
 `;
 
-const Content = styled.div`
+const Content = styled(motion.div)`
+  position: relative;
   display: flex;
   align-items: center;
-  padding: 48px 0;
-  transition: all ease-in 0.3s;
+  margin-top: -48px;
+  opacity: 0;
   @media (max-width: 742px) {
     flex-direction: column;
     gap: 16px;
   }
 `;
 
-const DeleteButton = styled.div`
+const DeleteButton = styled(motion.div)`
   display: flex;
   position: absolute;
   justify-content: center;
@@ -180,7 +179,7 @@ const AddTaskText = styled(Column)`
   }
 `;
 
-const Popup = styled.div`
+const Popup = styled(motion.div)`
   position: fixed;
   bottom: 32px;
   display: flex;
@@ -217,10 +216,6 @@ const Main = () => {
   const [mainWrapHeight, setMainWrapHeight] = useState(false);
 
   useEffect(() => {
-    if (mainWrap.current) {
-      mainWrap.current.style.opacity = "1";
-    }
-
     if (newEntry.current) {
       newEntry.current.scrollIntoView({
         behavior: "smooth",
@@ -231,6 +226,11 @@ const Main = () => {
   });
 
   const handleEntry = () => {
+    setClicked(true);
+    setTimeout(() => {
+      setClicked(false);
+    }, 800);
+    setPopupText("Added");
     setEntryInputs([
       ...entryInputs,
       {
@@ -239,8 +239,6 @@ const Main = () => {
         isVisible: true,
       },
     ]);
-    setClicked(true);
-    setPopupText("Added");
 
     if (mainWrap.current) {
       const WrapHeight = mainWrap.current.offsetHeight;
@@ -248,40 +246,29 @@ const Main = () => {
         setTopPosition(true);
       }
     }
-
-    if (addTask.current) {
-      addTask.current.style.opacity = "0";
-    }
-
-    if (popup.current) {
-      popup.current.style.opacity = "1";
-    }
-
-    setTimeout(() => {
-      if (popup.current) {
-        popup.current.style.opacity = "0";
-      }
-    }, 2000);
   };
 
   const handleSubmit = () => {
+    setClicked(true);
+    setTimeout(() => {
+      setClicked(false);
+    }, 800);
+    setPopupText("Submited");
     if (submitText.current) {
       submitText.current.style.opacity = "0";
     }
-
-    if (popup.current) {
-      popup.current.style.opacity = "1";
-      setPopupText("Submited");
-    }
-
-    setTimeout(() => {
-      if (popup.current) {
-        popup.current.style.opacity = "0";
-      }
-    }, 2000);
   };
 
   const removeContent = (index: number) => {
+    setClicked(true);
+    setTimeout(() => {
+      setClicked(false);
+    }, 800);
+    setPopupText("Removed");
+    setTimeout(() => {
+      setEntryInputs(entryInputs.filter((i) => i.id !== index));
+    }, 600);
+
     setEntryInputs(
       entryInputs.map((input) => {
         if (input.id === index) {
@@ -297,21 +284,6 @@ const Main = () => {
         setTopPosition(false);
       }
     }
-
-    setTimeout(() => {
-      setEntryInputs(entryInputs.filter((i) => i.id !== index));
-    }, 300);
-
-    setTimeout(() => {
-      if (popup.current) {
-        popup.current.style.opacity = "0";
-      }
-    }, 2000);
-
-    if (popup.current) {
-      popup.current.style.opacity = "1";
-      setPopupText("Removed");
-    }
   };
 
   return (
@@ -321,65 +293,83 @@ const Main = () => {
         justifyContent: topPosition || mainWrapHeight ? "flex-start" : "center",
       }}
     >
-      <Wrapper ref={mainWrap}>
+      <Wrapper animate={{ opacity: "1" }} ref={mainWrap}>
         <NavBar />
-
-        <TransitionGroup>
-          <ContentWrap ref={contentWrap}>
-            {entryInputs.map((index, i) => {
-              if (index.id === 1) {
-                return (
-                  <Content key={index.id}>
-                    <MainContainer
-                      titleOpacity={true}
-                      setTopPosition={setTopPosition}
-                      setMainWrapHeight={setMainWrapHeight}
-                    />
-                  </Content>
-                );
-              }
+        <ContentWrap ref={contentWrap}>
+          {entryInputs.map((index, i) => {
+            if (index.id === 1) {
               return (
-                <CSSTransition
-                  in={clicked}
-                  timeout={1000}
-                  classNames="main"
+                <Content
                   key={index.id}
+                  style={{
+                    marginTop: "0px",
+                    padding: "48px 0",
+                    opacity: 1,
+                  }}
                 >
-                  <Content
-                    className="content mainContent"
-                    ref={newEntry}
-                    style={{
-                      opacity: index.isVisible ? "" : 0,
-                      marginTop: index.isVisible ? "0px" : "-300px",
-                    }}
-                  >
-                    <MainContainer
-                      setTopPosition={setTopPosition}
-                      titleOpacity={false}
-                      setMainWrapHeight={setMainWrapHeight}
-                    />
-                    <DeleteButton onClick={() => removeContent(index.id)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="22"
-                        viewBox="0 0 18 22"
-                      >
-                        <path
-                          id="Union_11"
-                          data-name="Union 11"
-                          d="M3.286,22a2,2,0,0,1-2-2V5.5H16.715V20a2,2,0,0,1-2,2ZM12.215,8.893v9.715a.643.643,0,1,0,1.285,0V8.893a.643.643,0,1,0-1.285,0Zm-3.857,0v9.715a.643.643,0,0,0,1.286,0V8.893a.643.643,0,0,0-1.286,0Zm-3.857,0v9.715a.643.643,0,0,0,1.286,0V8.893a.643.643,0,0,0-1.286,0ZM0,4.125v-.75a2,2,0,0,1,2-2H6.429A1.375,1.375,0,0,1,7.8,0H10.2a1.375,1.375,0,0,1,1.375,1.375H16a2,2,0,0,1,2,2v.75Z"
-                          fill="#d9dee2"
-                        />
-                      </svg>
-                    </DeleteButton>
-                  </Content>
-                </CSSTransition>
+                  <MainContainer
+                    titleOpacity={true}
+                    setTopPosition={setTopPosition}
+                  />
+                </Content>
               );
-            })}
-          </ContentWrap>
-        </TransitionGroup>
+            }
+            return (
+              <Content
+                className="content mainContent"
+                ref={newEntry}
+                animate={{
+                  marginTop: index.isVisible ? "0px" : "-48px",
+                  opacity: index.isVisible ? "1" : "0",
+                }}
+                transition={{
+                  delay: index.isVisible ? 0 : 0.3,
+                }}
+                key={index.id}
+              >
+                <motion.div
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    alignItems: "center",
+                    opacity: "0",
+                    marginTop: "-48px",
+                  }}
+                  animate={{
+                    padding: index.isVisible ? "48px 0" : "0px",
+                    marginTop: index.isVisible ? "0px" : "-48px",
+                    opacity: index.isVisible ? "1" : "0",
+                  }}
+                  transition={{
+                    delay: index.isVisible ? 0.3 : 0,
+                  }}
+                >
+                  <MainContainer
+                    setTopPosition={setTopPosition}
+                    titleOpacity={false}
+                  />
+                  <DeleteButton onClick={() => removeContent(index.id)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="22"
+                      viewBox="0 0 18 22"
+                    >
+                      <path
+                        id="Union_11"
+                        data-name="Union 11"
+                        d="M3.286,22a2,2,0,0,1-2-2V5.5H16.715V20a2,2,0,0,1-2,2ZM12.215,8.893v9.715a.643.643,0,1,0,1.285,0V8.893a.643.643,0,1,0-1.285,0Zm-3.857,0v9.715a.643.643,0,0,0,1.286,0V8.893a.643.643,0,0,0-1.286,0Zm-3.857,0v9.715a.643.643,0,0,0,1.286,0V8.893a.643.643,0,0,0-1.286,0ZM0,4.125v-.75a2,2,0,0,1,2-2H6.429A1.375,1.375,0,0,1,7.8,0H10.2a1.375,1.375,0,0,1,1.375,1.375H16a2,2,0,0,1,2,2v.75Z"
+                        fill="#d9dee2"
+                      />
+                    </svg>
+                  </DeleteButton>
+                </motion.div>
+              </Content>
+            );
+          })}
+        </ContentWrap>
       </Wrapper>
+
       <BottomSection>
         <AddTaskText ref={addTask}>
           <Row gap="4px" justify="c">
@@ -510,7 +500,8 @@ const Main = () => {
           </svg>
         </LargeButton>
       </BottomSection>
-      <Popup ref={popup}>
+
+      <Popup animate={{ opacity: clicked ? "1" : "0" }} ref={popup}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="18"

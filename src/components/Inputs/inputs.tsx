@@ -1,29 +1,33 @@
 import React from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-export const Input = styled("input")`
+export const Input = styled(motion.input)`
+  display: flex;
+  justify-content: center;
   width: 100%;
   height: 48px;
-  padding: 12px 16px;
+  padding: 0 16px;
   border: 2px solid #d9dee2;
   border-radius: 24px;
   outline: none;
   color: #6d7378;
   background-color: #f1f3f3;
-  transition: all ease-in 0.3s;
   min-width: 128px;
   ::placeholder {
     color: #a9adb0;
   }
   &:hover {
     border: 2px solid #6d7378;
+    transition: all ease-in 0.3s;
   }
 `;
 
-export const LargeInput = styled.textarea`
+export const LargeInput = styled(motion.textarea)`
+  display: flex;
+  justify-content: center;
   width: 100%;
-  height: 0px;
-  padding: 12px 16px;
+  height: 100%;
   border: 2px solid #d9dee2;
   border-radius: 28px;
   outline: none;
@@ -32,11 +36,11 @@ export const LargeInput = styled.textarea`
   background-color: #f1f3f3;
   vertical-align: text-top;
   resize: none;
-  transition: all ease-in 0.3s;
   ::placeholder {
     color: #a9adb0;
   }
   &:hover {
     border: 2px solid #6d7378;
+    transition: all ease-in 0.3s;
   }
 `;

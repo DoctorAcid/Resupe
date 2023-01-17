@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-export const Row = styled.div<{
+export const Row = styled(motion.div)<{
   width?: string;
   padding?: "sm" | "md" | "lg" | string;
   gap?: "sm" | "md" | "lg" | string;
