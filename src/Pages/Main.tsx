@@ -192,15 +192,9 @@ const Popup = styled(motion.div)`
 `;
 
 const Main = () => {
-  const addTask = useRef<HTMLDivElement>(null);
-  const addButt = useRef<HTMLDivElement>(null);
   const submitText = useRef<HTMLDivElement>(null);
-  const submitButt = useRef<HTMLDivElement>(null);
   const mainWrap = useRef<HTMLDivElement>(null);
-  const appWrap = useRef<HTMLDivElement>(null);
-  const contentWrap = useRef<HTMLDivElement>(null);
   const newEntry = useRef<HTMLDivElement>(null);
-  const popup = useRef<HTMLDivElement>(null);
   const [entryInputs, setEntryInputs] = useState([
     { id: 1, name: "input1", isVisible: false },
   ]);
@@ -279,14 +273,13 @@ const Main = () => {
 
   return (
     <Wrap
-      ref={appWrap}
       style={{
         justifyContent: topPosition ? "flex-start" : "center",
       }}
     >
       <Wrapper animate={{ opacity: "1" }} ref={mainWrap}>
         <NavBar />
-        <ContentWrap ref={contentWrap}>
+        <ContentWrap>
           {entryInputs.map((index, i) => {
             if (index.id === 1) {
               return (
@@ -362,7 +355,7 @@ const Main = () => {
       </Wrapper>
 
       <BottomSection>
-        <AddTaskText ref={addTask}>
+        <AddTaskText>
           <Row gap="4px" justify="c">
             <h3>Click</h3>
             <svg
@@ -408,7 +401,7 @@ const Main = () => {
           </Row>
         </AddTaskText>
 
-        <LargeButton ref={addButt} className="addButton" onClick={handleEntry}>
+        <LargeButton className="addButton" onClick={handleEntry}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -424,7 +417,7 @@ const Main = () => {
           </svg>
         </LargeButton>
 
-        <SubmitTaskText ref={submitText} className="submitText">
+        <SubmitTaskText className="submitText">
           <Row gap="4px" justify="c">
             <h3>Click</h3>
             <svg
@@ -470,11 +463,7 @@ const Main = () => {
           </Row>
         </SubmitTaskText>
 
-        <LargeButton
-          ref={submitButt}
-          onClick={handleSubmit}
-          className="submitButton"
-        >
+        <LargeButton onClick={handleSubmit} className="submitButton">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -492,7 +481,7 @@ const Main = () => {
         </LargeButton>
       </BottomSection>
 
-      <Popup animate={{ opacity: clicked ? "1" : "0" }} ref={popup}>
+      <Popup animate={{ opacity: clicked ? "1" : "0" }}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="18"
