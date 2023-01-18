@@ -114,16 +114,6 @@ const MainContainer = ({ setTopPosition, titleOpacity }: Props) => {
     return inputHeight - 56;
   }
 
-  useEffect(() => {
-    if (textArea.current) {
-      if (inputFields.length === 2) {
-        const inputWidth = textArea.current.offsetWidth;
-        const width = String(inputWidth + 52) + "px";
-        setInputWidthReverse(width);
-      }
-    }
-  });
-
   const handleClick = () => {
     setClicked(true);
     setTopPosition(getTopSecHeight);
@@ -184,6 +174,12 @@ const MainContainer = ({ setTopPosition, titleOpacity }: Props) => {
       setTimeout(() => {
         setInputWidthReverse("100%");
       }, 800);
+    }
+
+    if (inputFields.length === 2 && textArea.current) {
+      const inputWidth = textArea.current.offsetWidth;
+      const width = String(inputWidth + 52) + "px";
+      setInputWidthReverse(width);
     }
   };
 
