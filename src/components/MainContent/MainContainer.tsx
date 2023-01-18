@@ -115,8 +115,8 @@ const MainContainer = ({ setTopPosition, titleOpacity }: Props) => {
   }
 
   useEffect(() => {
-    if (inputFields.length === 2) {
-      if (textArea.current) {
+    if (textArea.current) {
+      if (inputFields.length === 2) {
         const inputWidth = textArea.current.offsetWidth;
         const width = String(inputWidth + 52) + "px";
         setInputWidthReverse(width);
