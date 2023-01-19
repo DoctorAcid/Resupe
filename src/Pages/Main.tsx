@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Column } from "../components/Containers/Column";
 import { Row } from "../components/Containers/Row";
 import MainContainer from "../components/MainContent/MainContainer";
 import NavBar from "../components/NavBar/NavBar";
 import "./style.css";
-import { motion } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 
 const Wrap = styled(motion.div)`
   display: flex;
@@ -48,6 +48,7 @@ const LargeButton = styled(motion.div)`
   border-radius: 64px;
   background-color: #fff;
   border: 2px solid #d9dee2;
+  transition: all ease-in 0.3s;
   &:hover {
     transform: scale(1.1);
     background-color: #d9dee2;
@@ -100,7 +101,6 @@ const Content = styled(motion.div)`
   display: flex;
   align-items: center;
   margin-top: -48px;
-  opacity: 0;
   @media (max-width: 742px) {
     flex-direction: column;
     gap: 16px;
@@ -192,22 +192,55 @@ const Popup = styled(motion.div)`
 `;
 
 const Main = () => {
-  const submitText = useRef<HTMLDivElement>(null);
   const mainWrap = useRef<HTMLDivElement>(null);
   const newEntry = useRef<HTMLDivElement>(null);
+  const addingText = useRef<HTMLDivElement>(null);
+  const submitingText = useRef<HTMLDivElement>(null);
+
   const [entryInputs, setEntryInputs] = useState([
     { id: 1, name: "input1", isVisible: false },
   ]);
+
   const [popupText, setPopupText] = useState("");
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(false);
 
+  useEffect(() => {
+    if (entryInputs.length > 2) {
+      setTimeout(() => {
+        if (newEntry.current) {
+          newEntry.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center",
+          });
+        }
+      }, 400);
+    }
+  });
+
+  useEffect(() => {
+    if (entryInputs.length > 1) {
+      if (addingText.current) {
+        addingText.current.style.opacity = "0";
+      }
+    }
+    if (entryInputs.length === 1) {
+      if (addingText.current) {
+        addingText.current.style.opacity = "1";
+      }
+    }
+  });
+
   const handleEntry = () => {
+    setPopupText("Added");
+
     setClicked(true);
+
     setTimeout(() => {
       setClicked(false);
     }, 800);
-    setPopupText("Added");
+
     setEntryInputs([
       ...entryInputs,
       {
@@ -223,24 +256,19 @@ const Main = () => {
         setTopPosition(true);
       }
     }
-
-    if (newEntry.current) {
-      newEntry.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    }
   };
 
   const handleSubmit = () => {
     setClicked(true);
+
+    setPopupText("Submited");
+
     setTimeout(() => {
       setClicked(false);
     }, 800);
-    setPopupText("Submited");
-    if (submitText.current) {
-      submitText.current.style.opacity = "0";
+
+    if (submitingText.current) {
+      submitingText.current.style.opacity = "0";
     }
   };
 
@@ -303,8 +331,7 @@ const Main = () => {
                 className="content mainContent"
                 ref={newEntry}
                 animate={{
-                  marginTop: index.isVisible ? "0px" : "-48px",
-                  opacity: index.isVisible ? "1" : "0",
+                  marginTop: index.isVisible ? "0px" : "-64px",
                 }}
                 transition={{
                   delay: index.isVisible ? 0 : 0.3,
@@ -317,12 +344,15 @@ const Main = () => {
                     display: "flex",
                     alignItems: "center",
                     opacity: "0",
-                    marginTop: "-48px",
+                    marginTop: "-112px",
+                    scaleY: 0,
+                    top: 0,
                   }}
                   animate={{
+                    marginTop: index.isVisible ? "0px" : "-112px",
+                    scaleY: index.isVisible ? 1 : 0,
                     padding: index.isVisible ? "48px 0" : "0px",
-                    marginTop: index.isVisible ? "0px" : "-48px",
-                    opacity: index.isVisible ? "1" : "0",
+                    opacity: index.isVisible ? "1" : "",
                   }}
                   transition={{
                     delay: index.isVisible ? 0.3 : 0,
@@ -355,7 +385,7 @@ const Main = () => {
       </Wrapper>
 
       <BottomSection>
-        <AddTaskText>
+        <AddTaskText ref={addingText}>
           <Row gap="4px" justify="c">
             <h3>Click</h3>
             <svg
@@ -417,7 +447,7 @@ const Main = () => {
           </svg>
         </LargeButton>
 
-        <SubmitTaskText className="submitText">
+        <SubmitTaskText ref={submitingText}>
           <Row gap="4px" justify="c">
             <h3>Click</h3>
             <svg
