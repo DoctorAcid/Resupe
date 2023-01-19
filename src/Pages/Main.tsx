@@ -5,7 +5,7 @@ import { Row } from "../components/Containers/Row";
 import MainContainer from "../components/MainContent/MainContainer";
 import NavBar from "../components/NavBar/NavBar";
 import "./style.css";
-import { motion, useScroll } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Wrap = styled(motion.div)`
   display: flex;
@@ -102,7 +102,14 @@ const Content = styled(motion.div)`
   align-items: center;
   margin-top: -48px;
   @media (max-width: 742px) {
+    transform: scaleX(0);
+  }
+`;
+
+const CurrentContent = styled(motion.div)`
+  @media (max-width: 742px) {
     flex-direction: column;
+    align-items: center;
     gap: 16px;
   }
 `;
@@ -189,6 +196,7 @@ const Popup = styled(motion.div)`
   box-shadow: 8px 8px 40px 0px #0000000d;
   opacity: 0;
   transition: opacity ease-in 0.6s;
+  z-index: 2;
 `;
 
 const Main = () => {
@@ -317,6 +325,7 @@ const Main = () => {
                     marginTop: "0px",
                     padding: "48px 0",
                     opacity: 1,
+                    transform: "scaleX(1)",
                   }}
                 >
                   <MainContainer
@@ -332,18 +341,19 @@ const Main = () => {
                 ref={newEntry}
                 animate={{
                   marginTop: index.isVisible ? "0px" : "-64px",
+                  scaleX: index.isVisible ? 1 : 0,
                 }}
                 transition={{
                   delay: index.isVisible ? 0 : 0.3,
                 }}
                 key={index.id}
               >
-                <motion.div
+                <CurrentContent
                   style={{
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
-                    opacity: "0",
+                    opacity: 0,
                     marginTop: "-112px",
                     scaleY: 0,
                     top: 0,
@@ -377,7 +387,7 @@ const Main = () => {
                       />
                     </svg>
                   </DeleteButton>
-                </motion.div>
+                </CurrentContent>
               </Content>
             );
           })}

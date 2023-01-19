@@ -283,6 +283,7 @@ const MainContainer = ({ setTopPosition, titleOpacity }: Props) => {
                       width: index.isVisible ? "100%" : "0%",
                       height: index.isVisible ? "48px" : "0px",
                     }}
+                    transition={{ type: "tween" }}
                     key={index.id}
                   >
                     <LargeInput
