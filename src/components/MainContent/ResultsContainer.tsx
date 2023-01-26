@@ -12,12 +12,6 @@ interface InputItems {
   isVisible: boolean;
 }
 
-interface Props {
-  setTopPosition: React.Dispatch<React.SetStateAction<boolean>>;
-  titleOpacity: boolean;
-  topPosition: boolean;
-}
-
 const AddTasks = styled(motion.div)`
   display: flex;
   flex-direction: column;
@@ -72,16 +66,14 @@ const InputContaner = styled(motion.div)`
   opacity: 1;
 `;
 
-const TopSection = styled(Column)`
-  flex: 1;
+const TopSection = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
   gap: 8px;
+  flex: 0.75;
 `;
 
-const MainContainer = ({
-  topPosition,
-  setTopPosition,
-  titleOpacity,
-}: Props) => {
+const MainContainer = () => {
   const textArea = useRef<HTMLDivElement>(null);
   const largeInput = useRef<HTMLDivElement>(null);
   const topSection = useRef<HTMLDivElement>(null);
@@ -111,7 +103,6 @@ const MainContainer = ({
 
   const handleClick = () => {
     setClicked(true);
-    setTopPosition(!topPosition);
     setInputHeight(addButtonHeight);
     setInputFields([
       ...inputFields,
@@ -144,7 +135,6 @@ const MainContainer = ({
   };
 
   const removeInput = (index: number) => {
-    setTopPosition(!topPosition);
     setInputFields(
       inputFields.map((input) => {
         if (input.id === index) {
@@ -182,30 +172,15 @@ const MainContainer = ({
     <TopSection animate={{ gap: clicked ? "24px" : "8px" }} ref={topSection}>
       <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
         <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
-          <TitleTag
-            justify="fe"
-            title="Job Lists"
-            titleOpacity={titleOpacity}
-          />
           <Input placeholder="Your job title..." />
         </Row>
 
         <Row gap="sm" style={{ flex: "1" }}>
           <Column gap="sm">
-            <TitleTag
-              title="Start Date"
-              marginLeft="14px"
-              titleOpacity={titleOpacity}
-            />
             <Input type={"date"} placeholder="__/__/___" />
           </Column>
 
           <Column gap="sm">
-            <TitleTag
-              title="End Date"
-              marginLeft="14px"
-              titleOpacity={titleOpacity}
-            />
             <Input
               className="smallInput"
               type={"date"}
@@ -216,11 +191,6 @@ const MainContainer = ({
       </Row>
 
       <Row className="shiftTitle" align="fs" justify="c" gap="md">
-        <TitleTag
-          align="fs"
-          title="Tasks, Responsibilities,& Achievements"
-          titleOpacity={titleOpacity}
-        />
         <Row
           gap="sm"
           animate={{
@@ -355,12 +325,6 @@ const MainContainer = ({
       </Row>
 
       <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
-        <TitleTag
-          align="fs"
-          justify="fe"
-          title="A Broad Sentence Describing The Role"
-          titleOpacity={titleOpacity}
-        />
         <Input placeholder="Brief statment of your role" />
       </Row>
     </TopSection>

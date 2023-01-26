@@ -5,7 +5,8 @@ import { Row } from "../components/Containers/Row";
 import MainContainer from "../components/MainContent/MainContainer";
 import NavBar from "../components/NavBar/NavBar";
 import "./style.css";
-import { motion } from "framer-motion";
+import { delay, motion } from "framer-motion";
+import ResultsContainer from "../components/MainContent/ResultsContainer";
 
 const Wrap = styled(motion.div)`
   display: flex;
@@ -99,7 +100,8 @@ const ContentWrap = styled(motion.div)`
 const Content = styled(motion.div)`
   position: relative;
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  align-items: flex-end;
   margin-top: -48px;
   @media (max-width: 742px) {
     transform: scaleX(0);
@@ -209,9 +211,11 @@ const Main = () => {
     { id: 1, name: "input1", isVisible: false },
   ]);
 
+  const [reRender, setReRender] = useState(false);
   const [popupText, setPopupText] = useState("");
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(false);
+  const [submitHandler, setSubmitHandler] = useState(false);
 
   useEffect(() => {
     if (entryInputs.length > 2) {
@@ -228,6 +232,18 @@ const Main = () => {
   });
 
   useEffect(() => {
+    if (mainWrap.current) {
+      const top = mainWrap.current.offsetHeight;
+      if (top > 1080) {
+        setTopPosition(true);
+      }
+      if (top < 1080) {
+        setTopPosition(false);
+      }
+    }
+  }, [clicked, reRender]);
+
+  useEffect(() => {
     if (entryInputs.length > 1) {
       if (addingText.current) {
         addingText.current.style.opacity = "0";
@@ -238,7 +254,7 @@ const Main = () => {
         addingText.current.style.opacity = "1";
       }
     }
-  });
+  }, [clicked]);
 
   const handleEntry = () => {
     setPopupText("Added");
@@ -257,17 +273,11 @@ const Main = () => {
         isVisible: true,
       },
     ]);
-
-    if (mainWrap.current) {
-      const WrapHeight = mainWrap.current.offsetHeight;
-      if (WrapHeight > 1200) {
-        setTopPosition(true);
-      }
-    }
   };
 
   const handleSubmit = () => {
     setClicked(true);
+    setSubmitHandler(true);
 
     setPopupText("Submited");
 
@@ -298,13 +308,6 @@ const Main = () => {
         return input;
       })
     );
-
-    if (mainWrap.current) {
-      const WrapHeight = mainWrap.current.offsetHeight;
-      if (WrapHeight < 1200) {
-        setTopPosition(false);
-      }
-    }
   };
 
   return (
@@ -313,7 +316,10 @@ const Main = () => {
         justifyContent: topPosition ? "flex-start" : "center",
       }}
     >
-      <Wrapper animate={{ opacity: "1" }} ref={mainWrap}>
+      <Wrapper
+        animate={{ width: submitHandler ? "1600px" : "800px", opacity: "1" }}
+        ref={mainWrap}
+      >
         <NavBar />
         <ContentWrap>
           {entryInputs.map((index, i) => {
@@ -329,9 +335,88 @@ const Main = () => {
                   }}
                 >
                   <MainContainer
+                    topPosition={reRender}
                     titleOpacity={true}
-                    setTopPosition={setTopPosition}
+                    setTopPosition={setReRender}
                   />
+                  <motion.div
+                    style={{
+                      position: "absolute",
+                      right: "0",
+                      width: "4px",
+                      borderRadius: "2px",
+                      height: "216px",
+                      opacity: 1,
+                      zIndex: -1,
+                    }}
+                    animate={{
+                      opacity: submitHandler ? 0 : 1,
+                    }}
+                    transition={{ delay: 1.7 }}
+                  >
+                    <motion.div
+                      style={{ marginLeft: "-24px" }}
+                      animate={{ marginLeft: submitHandler ? "16px" : "-24px" }}
+                    >
+                      <Column gap="sm">
+                        <div
+                          style={{
+                            width: "4px",
+                            height: "48px",
+                            borderRadius: "2px",
+                            backgroundColor: "#d9dee2",
+                          }}
+                        />
+                        <div
+                          style={{
+                            width: "4px",
+                            height: "104px",
+                            borderRadius: "2px",
+                            backgroundColor: "#d9dee2",
+                          }}
+                        />
+                        <div
+                          style={{
+                            width: "4px",
+                            height: "48px",
+                            borderRadius: "2px",
+                            backgroundColor: "#d9dee2",
+                          }}
+                        />
+                      </Column>
+                    </motion.div>
+                  </motion.div>
+
+                  <motion.div
+                    style={{
+                      position: "absolute",
+                      width: "0px",
+                      height: "216px",
+                      right: "-16px",
+                      overflow: "hidden",
+                    }}
+                    animate={{
+                      position: submitHandler ? "relative" : "absolute",
+                      width: submitHandler ? "512px" : "0px",
+                    }}
+                    transition={{ duration: 1, delay: 1 }}
+                  >
+                    <motion.div
+                      style={{
+                        position: "relative",
+                        width: "512px",
+                        marginLeft: "-256px",
+                        scaleX: 0,
+                      }}
+                      animate={{
+                        marginLeft: submitHandler ? "0px" : "-256px",
+                        scaleX: submitHandler ? 1 : 0,
+                      }}
+                      transition={{ duration: 1 }}
+                    >
+                      <ResultsContainer />
+                    </motion.div>
+                  </motion.div>
                 </Content>
               );
             }
@@ -369,7 +454,8 @@ const Main = () => {
                   }}
                 >
                   <MainContainer
-                    setTopPosition={setTopPosition}
+                    topPosition={reRender}
+                    setTopPosition={setReRender}
                     titleOpacity={false}
                   />
                   <DeleteButton onClick={() => removeContent(index.id)}>
