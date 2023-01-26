@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Column } from "../Containers/Column";
 import { Row } from "../Containers/Row";
 import { Input, LargeInput } from "../Inputs/inputs";
-import TitleTag from "../TitleTag/TitleTag";
 import { motion } from "framer-motion";
 
 interface InputItems {

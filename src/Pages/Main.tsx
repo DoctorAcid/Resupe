@@ -5,7 +5,7 @@ import { Row } from "../components/Containers/Row";
 import MainContainer from "../components/MainContent/MainContainer";
 import NavBar from "../components/NavBar/NavBar";
 import "./style.css";
-import { delay, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import ResultsContainer from "../components/MainContent/ResultsContainer";
 
 const Wrap = styled(motion.div)`
@@ -229,7 +229,7 @@ const Main = () => {
         }
       }, 400);
     }
-  });
+  }, [entryInputs.length]);
 
   useEffect(() => {
     if (mainWrap.current) {
