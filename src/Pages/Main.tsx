@@ -254,7 +254,7 @@ const Main = () => {
         addingText.current.style.opacity = "1";
       }
     }
-  }, [clicked]);
+  }, [entryInputs.length]);
 
   const handleEntry = () => {
     setPopupText("Added");
