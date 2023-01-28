@@ -133,7 +133,7 @@ const MainContainer = ({
   const [resultsContWidth, setResultsContWidth] = useState("");
   const [resultsContPadding, setResultsContPadding] = useState("");
   const [resultsColumnDiv, setresultsColumnDiv] = useState(false);
-  const [width, height] = useWindowSize();
+  const [width] = useWindowSize();
 
   useEffect(() => {
     if (width < 1420) {
