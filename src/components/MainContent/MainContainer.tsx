@@ -102,7 +102,7 @@ const TopSection = styled(Column)`
 const FlexWrap = styled(motion.div)`
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 48px;
   align-items: flex-end;
   @media (max-width: 1420px) {
     flex-direction: column;
