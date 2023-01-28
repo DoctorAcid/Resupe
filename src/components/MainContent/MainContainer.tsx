@@ -1,10 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Column } from "../Containers/Column";
 import { Row } from "../Containers/Row";
 import { Input, LargeInput } from "../Inputs/inputs";
 import TitleTag from "../TitleTag/TitleTag";
 import { motion } from "framer-motion";
+import ResultsContainer from "./ResultsContainer";
+import { useWindowSize } from "../../custom_hooks/useWindowSize";
 
 interface InputItems {
   id: number;
@@ -16,9 +18,10 @@ interface Props {
   setTopPosition: React.Dispatch<React.SetStateAction<boolean>>;
   titleOpacity: boolean;
   topPosition: boolean;
+  submitHandler: boolean;
 }
 
-const AddTasks = styled(motion.div)`
+const AddTasks = styled(motion.button)`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -29,8 +32,21 @@ const AddTasks = styled(motion.div)`
   padding: 24px 12px;
   border-radius: 24px;
   height: 88px;
-
   transition: box-shadow ease-in 0.3s;
+
+  &:disabled {
+    background-color: #f8f8f8;
+
+    &:hover {
+      border: 2px solid #d9dee2;
+      box-shadow: none;
+    }
+
+    &:hover svg path {
+      fill: #d9dee2;
+    }
+  }
+
   &:hover {
     transition: border ease-in 0.3s;
     border: 2px solid #6d7378;
@@ -43,11 +59,17 @@ const AddTasks = styled(motion.div)`
   }
 `;
 
-const DeleteButton = styled(motion.div)`
+const DeleteButton = styled(motion.button)`
   position: absolute;
   right: 0;
   opacity: 0;
   padding: 0 16px;
+  background-color: transparent;
+  border: none;
+
+  &:disabled {
+    display: none;
+  }
 
   &:hover svg path {
     fill: red;
@@ -77,10 +99,25 @@ const TopSection = styled(Column)`
   gap: 8px;
 `;
 
+const FlexWrap = styled(motion.div)`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-end;
+  @media (max-width: 1420px) {
+    flex-direction: column;
+  }
+`;
+
+const ResultsContWrap = styled(motion.div)``;
+
+const ResultsWrap = styled(motion.div)``;
+
 const MainContainer = ({
   topPosition,
   setTopPosition,
   titleOpacity,
+  submitHandler,
 }: Props) => {
   const textArea = useRef<HTMLDivElement>(null);
   const largeInput = useRef<HTMLDivElement>(null);
@@ -93,6 +130,31 @@ const MainContainer = ({
   const [inputHeight, setInputHeight] = useState(88);
   const [inputWidth, setInputWidth] = useState("");
   const [inputWidthReverse, setInputWidthReverse] = useState("100%");
+  const [resultsContWidth, setResultsContWidth] = useState("");
+  const [resultsContPadding, setResultsContPadding] = useState("");
+  const [resultsColumnDiv, setresultsColumnDiv] = useState(false);
+  const [width, height] = useWindowSize();
+
+  useEffect(() => {
+    if (width < 1420) {
+      setResultsContWidth("562px");
+      setresultsColumnDiv(true);
+    }
+    if (width < 820) {
+      setResultsContWidth("100%");
+      setResultsContPadding("174px");
+    }
+    if (width < 742) {
+      setResultsContPadding("0px");
+    }
+    if (width > 820) {
+      setResultsContPadding("0px");
+    }
+    if (width > 1420) {
+      setResultsContWidth("512px");
+      setresultsColumnDiv(false);
+    }
+  }, [width]);
 
   function addButtonHeight() {
     if (inputFields.length === 1) {
@@ -179,191 +241,382 @@ const MainContainer = ({
   };
 
   return (
-    <TopSection animate={{ gap: clicked ? "24px" : "8px" }} ref={topSection}>
-      <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
-        <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
+    <FlexWrap>
+      <TopSection animate={{ gap: clicked ? "24px" : "8px" }} ref={topSection}>
+        <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
+          <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
+            <TitleTag
+              justify="fe"
+              title="Job Lists"
+              titleOpacity={titleOpacity}
+            />
+            <Input placeholder="Your job title..." />
+          </Row>
+
+          <Row gap="sm" style={{ flex: "1" }}>
+            <Column gap="sm">
+              <TitleTag
+                title="Start Date"
+                marginLeft="14px"
+                titleOpacity={titleOpacity}
+              />
+              <Input type={"date"} placeholder="__/__/___" />
+            </Column>
+
+            <Column gap="sm">
+              <TitleTag
+                title="End Date"
+                marginLeft="14px"
+                titleOpacity={titleOpacity}
+              />
+              <Input
+                className="smallInput"
+                type={"date"}
+                placeholder="__/__/___"
+              />
+            </Column>
+          </Row>
+        </Row>
+
+        <Row className="shiftTitle" align="fs" justify="c" gap="md">
           <TitleTag
-            justify="fe"
-            title="Job Lists"
+            align="fs"
+            title="Tasks, Responsibilities,& Achievements"
             titleOpacity={titleOpacity}
           />
-          <Input placeholder="Your job title..." />
-        </Row>
-
-        <Row gap="sm" style={{ flex: "1" }}>
-          <Column gap="sm">
-            <TitleTag
-              title="Start Date"
-              marginLeft="14px"
-              titleOpacity={titleOpacity}
-            />
-            <Input type={"date"} placeholder="__/__/___" />
-          </Column>
-
-          <Column gap="sm">
-            <TitleTag
-              title="End Date"
-              marginLeft="14px"
-              titleOpacity={titleOpacity}
-            />
-            <Input
-              className="smallInput"
-              type={"date"}
-              placeholder="__/__/___"
-            />
-          </Column>
-        </Row>
-      </Row>
-
-      <Row className="shiftTitle" align="fs" justify="c" gap="md">
-        <TitleTag
-          align="fs"
-          title="Tasks, Responsibilities,& Achievements"
-          titleOpacity={titleOpacity}
-        />
-        <Row
-          gap="sm"
-          animate={{
-            justifyContent: clicked ? "flex-start" : "center",
-          }}
-        >
-          <MultiInputs
+          <Row
+            gap="sm"
             animate={{
-              flexDirection: clicked ? "column" : "row",
+              justifyContent: clicked ? "flex-start" : "center",
             }}
-            transition={{ delay: clicked ? 0 : 0.6 }}
-            ref={textArea}
           >
-            <motion.div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
-              }}
+            <MultiInputs
               animate={{
-                width: clicked ? inputWidth : inputWidthReverse,
+                flexDirection: clicked ? "column" : "row",
               }}
+              transition={{ delay: clicked ? 0 : 0.6 }}
+              ref={textArea}
             >
-              {inputFields.map((index, i) => {
-                if (index.id === 1) {
+              <motion.div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+                animate={{
+                  width: clicked ? inputWidth : inputWidthReverse,
+                }}
+              >
+                {inputFields.map((index, i) => {
+                  if (index.id === 1) {
+                    return (
+                      <InputContaner
+                        ref={largeInput}
+                        key={index.id}
+                        animate={{
+                          height: clicked ? "48px" : "104px",
+                        }}
+                        style={{
+                          height: "104px",
+                          width: "100%",
+                        }}
+                      >
+                        <LargeInput
+                          style={{
+                            padding: "12px 16px",
+                          }}
+                          placeholder={
+                            "Tasks, responsibilities and achievements..."
+                          }
+                        />
+                      </InputContaner>
+                    );
+                  }
                   return (
                     <InputContaner
                       ref={largeInput}
-                      key={index.id}
+                      className="input"
                       animate={{
-                        height: clicked ? "48px" : "104px",
+                        width: index.isVisible ? "100%" : "0%",
+                        height: index.isVisible ? "48px" : "0px",
                       }}
-                      style={{
-                        height: "104px",
-                        width: "100%",
-                      }}
+                      transition={{ type: "tween" }}
+                      key={index.id}
                     >
                       <LargeInput
-                        style={{
-                          padding: "12px 16px",
+                        animate={{
+                          padding: index.isVisible ? "12px 16px" : "0px",
                         }}
-                        placeholder={
-                          "Tasks, responsibilities and achievements..."
-                        }
+                        placeholder={"Tasks..."}
                       />
+                      <DeleteButton
+                        animate={{
+                          opacity: index.isVisible ? "1" : "0",
+                        }}
+                        style={{
+                          transition: index.isVisible
+                            ? "all ease-in 1.4s"
+                            : "all ease-in 0.1s",
+                        }}
+                        onClick={() => removeInput(index.id)}
+                        disabled={submitHandler}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="14"
+                          height="15.999"
+                          viewBox="0 0 14 15.999"
+                        >
+                          <path
+                            id="Union_11"
+                            data-name="Union 11"
+                            d="M3,16a2,2,0,0,1-2-2V4H13V14a2,2,0,0,1-2,2ZM9.5,6.5v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0ZM0,3A2,2,0,0,1,2,1H5A1,1,0,0,1,6,0H8A1,1,0,0,1,9,1h3a2,2,0,0,1,2,2Z"
+                            fill="#d9dee2"
+                          />
+                        </svg>
+                      </DeleteButton>
                     </InputContaner>
                   );
-                }
-                return (
-                  <InputContaner
-                    ref={largeInput}
-                    className="input"
-                    animate={{
-                      width: index.isVisible ? "100%" : "0%",
-                      height: index.isVisible ? "48px" : "0px",
+                })}
+              </motion.div>
+            </MultiInputs>
+            <Column
+              style={{
+                position: "absolute",
+                height: "fit-content",
+                width: "fit-content",
+                right: "7px",
+              }}
+              animate={{
+                position: clicked ? "relative" : "absolute",
+                right: clicked ? 0 : 7,
+              }}
+              transition={{ delay: clicked ? 0.2 : 0 }}
+            >
+              <AddTasks
+                onClick={handleClick}
+                animate={{
+                  height: inputHeight,
+                }}
+                disabled={submitHandler}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    id="Union_4"
+                    data-name="Union 4"
+                    d="M7,15V9H1A1,1,0,1,1,1,7H7V1A1,1,0,1,1,9,1V7h6a1,1,0,0,1,0,2H9v6a1,1,0,1,1-2,0Z"
+                    fill="#d9dee2"
+                  />
+                </svg>
+              </AddTasks>
+            </Column>
+          </Row>
+        </Row>
+
+        <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
+          <TitleTag
+            align="fs"
+            justify="fe"
+            title="A Broad Sentence Describing The Role"
+            titleOpacity={titleOpacity}
+          />
+          <Input placeholder="Brief statment of your role" />
+        </Row>
+      </TopSection>
+
+      {submitHandler ? (
+        <>
+          {resultsColumnDiv ? (
+            <motion.div
+              style={{
+                position: "relative",
+                bottom: "0px",
+                width: resultsContWidth,
+                borderRadius: "2px",
+                height: "0px",
+                opacity: 1,
+                zIndex: -1,
+              }}
+              animate={{
+                width: submitHandler ? "400px" : resultsContWidth,
+                opacity: submitHandler ? 0 : 1,
+                display: submitHandler ? "none" : "flex",
+              }}
+              transition={{ delay: 1 }}
+            >
+              <motion.div
+                style={{ opacity: 0, marginTop: "-128px" }}
+                animate={{
+                  opacity: submitHandler ? 1 : 0,
+                  marginTop: submitHandler ? "0px" : "-128px",
+                }}
+              >
+                <Column gap="sm" animate={{ gap: clicked ? "24px" : "8px" }}>
+                  <div
+                    style={{
+                      width: "4px",
+                      height: "48px",
+                      borderRadius: "2px",
+                      backgroundColor: "#d9dee2",
                     }}
-                    transition={{ type: "tween" }}
-                    key={index.id}
-                  >
-                    <LargeInput
-                      animate={{
-                        padding: index.isVisible ? "12px 16px" : "0px",
-                      }}
-                      placeholder={"Tasks..."}
-                    />
-                    <DeleteButton
-                      animate={{
-                        opacity: index.isVisible ? "1" : "0",
-                      }}
-                      style={{
-                        transition: index.isVisible
-                          ? "all ease-in 1.4s"
-                          : "all ease-in 0.1s",
-                      }}
-                      onClick={() => removeInput(index.id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="15.999"
-                        viewBox="0 0 14 15.999"
-                      >
-                        <path
-                          id="Union_11"
-                          data-name="Union 11"
-                          d="M3,16a2,2,0,0,1-2-2V4H13V14a2,2,0,0,1-2,2ZM9.5,6.5v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0ZM0,3A2,2,0,0,1,2,1H5A1,1,0,0,1,6,0H8A1,1,0,0,1,9,1h3a2,2,0,0,1,2,2Z"
-                          fill="#d9dee2"
+                  />
+                  <Column gap="sm">
+                    {inputFields.map((items, index) => {
+                      if (items.id === 1) {
+                        return (
+                          <div
+                            key={index}
+                            style={{
+                              width: "4px",
+                              height: clicked ? "48px" : "104px",
+                              borderRadius: "2px",
+                              backgroundColor: "#d9dee2",
+                            }}
+                          />
+                        );
+                      }
+                      return (
+                        <div
+                          key={index}
+                          style={{
+                            width: "4px",
+                            height: "48px",
+                            borderRadius: "2px",
+                            backgroundColor: "#d9dee2",
+                          }}
                         />
-                      </svg>
-                    </DeleteButton>
-                  </InputContaner>
-                );
-              })}
+                      );
+                    })}
+                  </Column>
+                  <div
+                    style={{
+                      width: "4px",
+                      height: "48px",
+                      borderRadius: "2px",
+                      backgroundColor: "#d9dee2",
+                    }}
+                  />
+                </Column>
+              </motion.div>
             </motion.div>
-          </MultiInputs>
-          <Column
+          ) : (
+            <motion.div
+              style={{
+                position: "relative",
+                right: "0",
+                width: "0px",
+                borderRadius: "2px",
+                // height: "216px",
+                opacity: 1,
+                zIndex: -1,
+              }}
+              animate={{
+                opacity: submitHandler ? 0 : 1,
+                display: submitHandler ? "none" : "flex",
+              }}
+              transition={{ delay: 1 }}
+            >
+              <motion.div
+                style={{ opacity: 0, marginLeft: "-24px" }}
+                animate={{
+                  opacity: submitHandler ? 1 : 0,
+                  marginLeft: submitHandler ? "0px" : "-24px",
+                }}
+              >
+                <Column gap="sm" animate={{ gap: clicked ? "24px" : "8px" }}>
+                  <div
+                    style={{
+                      width: "4px",
+                      height: "48px",
+                      borderRadius: "2px",
+                      backgroundColor: "#d9dee2",
+                    }}
+                  />
+                  <Column gap="sm">
+                    {inputFields.map((items, index) => {
+                      if (items.id === 1) {
+                        return (
+                          <div
+                            key={index}
+                            style={{
+                              width: "4px",
+                              height: clicked ? "48px" : "104px",
+                              borderRadius: "2px",
+                              backgroundColor: "#d9dee2",
+                            }}
+                          />
+                        );
+                      }
+                      return (
+                        <div
+                          key={index}
+                          style={{
+                            width: "4px",
+                            height: "48px",
+                            borderRadius: "2px",
+                            backgroundColor: "#d9dee2",
+                          }}
+                        />
+                      );
+                    })}
+                  </Column>
+                  <div
+                    style={{
+                      width: "4px",
+                      height: "48px",
+                      borderRadius: "2px",
+                      backgroundColor: "#d9dee2",
+                    }}
+                  />
+                </Column>
+              </motion.div>
+            </motion.div>
+          )}
+
+          <ResultsWrap
             style={{
               position: "absolute",
-              height: "fit-content",
-              width: "fit-content",
-              right: "7px",
+              width: "0px",
+              overflow: "hidden",
+              paddingLeft: resultsContPadding,
             }}
             animate={{
-              position: clicked ? "relative" : "absolute",
-              right: clicked ? 0 : 7,
+              position: submitHandler ? "relative" : "absolute",
+              width: submitHandler ? resultsContWidth : "0px",
             }}
-            transition={{ delay: clicked ? 0.2 : 0 }}
+            transition={{ duration: 1 }}
           >
-            <AddTasks
-              onClick={handleClick}
-              animate={{
-                height: inputHeight,
+            <ResultsContWrap
+              style={{
+                position: "relative",
+                marginLeft: "-256px",
+                scaleX: 0,
+                width: resultsContWidth,
               }}
+              animate={{
+                marginLeft: submitHandler ? "0px" : "-256px",
+                scaleX: submitHandler ? 1 : 0,
+              }}
+              transition={{ duration: 1, delay: 1 }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  id="Union_4"
-                  data-name="Union 4"
-                  d="M7,15V9H1A1,1,0,1,1,1,7H7V1A1,1,0,1,1,9,1V7h6a1,1,0,0,1,0,2H9v6a1,1,0,1,1-2,0Z"
-                  fill="#d9dee2"
-                />
-              </svg>
-            </AddTasks>
-          </Column>
-        </Row>
-      </Row>
-
-      <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
-        <TitleTag
-          align="fs"
-          justify="fe"
-          title="A Broad Sentence Describing The Role"
-          titleOpacity={titleOpacity}
-        />
-        <Input placeholder="Brief statment of your role" />
-      </Row>
-    </TopSection>
+              <ResultsContainer
+                inputFields={inputFields}
+                clicked={clicked}
+                inputHeight={inputHeight}
+                inputWidth={inputWidth}
+                inputWidthReverse={inputWidthReverse}
+              />
+            </ResultsContWrap>
+          </ResultsWrap>
+        </>
+      ) : null}
+    </FlexWrap>
   );
 };
 export default MainContainer;

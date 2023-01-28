@@ -6,7 +6,6 @@ import MainContainer from "../components/MainContent/MainContainer";
 import NavBar from "../components/NavBar/NavBar";
 import "./style.css";
 import { motion } from "framer-motion";
-import ResultsContainer from "../components/MainContent/ResultsContainer";
 
 const Wrap = styled(motion.div)`
   display: flex;
@@ -40,7 +39,7 @@ const Wrapper = styled(motion.div)`
   }
 `;
 
-const LargeButton = styled(motion.div)`
+const LargeButton = styled(motion.button)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,6 +49,21 @@ const LargeButton = styled(motion.div)`
   background-color: #fff;
   border: 2px solid #d9dee2;
   transition: all ease-in 0.3s;
+  cursor: pointer;
+  &:disabled {
+    background-color: #f8f8f8;
+    cursor: default;
+    &:hover {
+      transform: scale(1);
+      border: 2px solid #d9dee2;
+      background-color: #f8f8f8;
+      box-shadow: none;
+    }
+
+    &:hover svg path {
+      fill: #d9dee2;
+    }
+  }
   &:hover {
     transform: scale(1.1);
     background-color: #d9dee2;
@@ -285,6 +299,10 @@ const Main = () => {
       setClicked(false);
     }, 800);
 
+    if (addingText.current) {
+      addingText.current.style.opacity = "0";
+    }
+
     if (submitingText.current) {
       submitingText.current.style.opacity = "0";
     }
@@ -338,85 +356,8 @@ const Main = () => {
                     topPosition={reRender}
                     titleOpacity={true}
                     setTopPosition={setReRender}
+                    submitHandler={submitHandler}
                   />
-                  <motion.div
-                    style={{
-                      position: "absolute",
-                      right: "0",
-                      width: "4px",
-                      borderRadius: "2px",
-                      height: "216px",
-                      opacity: 1,
-                      zIndex: -1,
-                    }}
-                    animate={{
-                      opacity: submitHandler ? 0 : 1,
-                    }}
-                    transition={{ delay: 1.7 }}
-                  >
-                    <motion.div
-                      style={{ marginLeft: "-24px" }}
-                      animate={{ marginLeft: submitHandler ? "16px" : "-24px" }}
-                    >
-                      <Column gap="sm">
-                        <div
-                          style={{
-                            width: "4px",
-                            height: "48px",
-                            borderRadius: "2px",
-                            backgroundColor: "#d9dee2",
-                          }}
-                        />
-                        <div
-                          style={{
-                            width: "4px",
-                            height: "104px",
-                            borderRadius: "2px",
-                            backgroundColor: "#d9dee2",
-                          }}
-                        />
-                        <div
-                          style={{
-                            width: "4px",
-                            height: "48px",
-                            borderRadius: "2px",
-                            backgroundColor: "#d9dee2",
-                          }}
-                        />
-                      </Column>
-                    </motion.div>
-                  </motion.div>
-
-                  <motion.div
-                    style={{
-                      position: "absolute",
-                      width: "0px",
-                      height: "216px",
-                      right: "-16px",
-                      overflow: "hidden",
-                    }}
-                    animate={{
-                      position: submitHandler ? "relative" : "absolute",
-                      width: submitHandler ? "512px" : "0px",
-                    }}
-                    transition={{ duration: 1, delay: 1 }}
-                  >
-                    <motion.div
-                      style={{
-                        position: "relative",
-                        width: "512px",
-                        marginLeft: "-256px",
-                        scaleX: 0,
-                      }}
-                      animate={{
-                        marginLeft: submitHandler ? "0px" : "-256px",
-                        scaleX: submitHandler ? 1 : 0,
-                      }}
-                      transition={{ duration: 1 }}
-                    >
-                      <ResultsContainer />
-                    </motion.div>
-                  </motion.div>
                 </Content>
               );
             }
@@ -457,6 +398,7 @@ const Main = () => {
                     topPosition={reRender}
                     setTopPosition={setReRender}
                     titleOpacity={false}
+                    submitHandler={submitHandler}
                   />
                   <DeleteButton onClick={() => removeContent(index.id)}>
                     <svg
@@ -527,7 +469,11 @@ const Main = () => {
           </Row>
         </AddTaskText>
 
-        <LargeButton className="addButton" onClick={handleEntry}>
+        <LargeButton
+          className="addButton"
+          onClick={handleEntry}
+          disabled={submitHandler}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

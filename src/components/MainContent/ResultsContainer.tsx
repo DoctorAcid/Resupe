@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { Column } from "../Containers/Column";
 import { Row } from "../Containers/Row";
@@ -11,7 +11,15 @@ interface InputItems {
   isVisible: boolean;
 }
 
-const AddTasks = styled(motion.div)`
+interface Props {
+  inputFields: InputItems[];
+  clicked: boolean;
+  inputHeight: number;
+  inputWidth: string;
+  inputWidthReverse: string;
+}
+
+const ReloadTask = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,10 +27,9 @@ const AddTasks = styled(motion.div)`
   z-index: 1;
   border: 2px solid #d9dee2;
   background-color: #fff;
-  padding: 24px 12px;
   border-radius: 24px;
   height: 88px;
-
+  width: 44px;
   transition: box-shadow ease-in 0.3s;
   &:hover {
     transition: border ease-in 0.3s;
@@ -33,18 +40,6 @@ const AddTasks = styled(motion.div)`
   &:hover svg path {
     transition: all ease-in 0.3s;
     fill: #6d7378;
-  }
-`;
-
-const DeleteButton = styled(motion.div)`
-  position: absolute;
-  right: 0;
-  opacity: 0;
-  padding: 0 16px;
-
-  &:hover svg path {
-    fill: red;
-    transition: fill ease-in 0.3s;
   }
 `;
 
@@ -69,109 +64,65 @@ const TopSection = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex: 0.75;
 `;
 
-const MainContainer = () => {
-  const textArea = useRef<HTMLDivElement>(null);
-  const largeInput = useRef<HTMLDivElement>(null);
-  const topSection = useRef<HTMLDivElement>(null);
-  const [inputFields, setInputFields] = useState<InputItems[]>([
-    { id: 1, name: "input1", isVisible: false },
-  ]);
-
-  const [clicked, setClicked] = useState(false);
-  const [inputHeight, setInputHeight] = useState(88);
-  const [inputWidth, setInputWidth] = useState("");
-  const [inputWidthReverse, setInputWidthReverse] = useState("100%");
-
-  function addButtonHeight() {
-    if (inputFields.length === 1) {
-      return 104;
-    }
-    return inputHeight + 56;
+const ReloadButton = styled(motion.div)`
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  border: 2px solid #d9dee2;
+  background-color: #fff;
+  border-radius: 24px;
+  height: 34px;
+  width: 48px;
+  transition: box-shadow ease-in 0.3s;
+  &:hover {
+    transition: border ease-in 0.3s;
+    border: 2px solid #6d7378;
+    box-shadow: 8px 8px 40px 0px #0000000d;
   }
 
-  function reduseButtonHeight() {
-    if (inputFields.length === 2) {
-      setInputHeight(88);
-      return inputHeight;
-    }
-    return inputHeight - 56;
+  &:hover svg path {
+    transition: all ease-in 0.3s;
+    fill: #6d7378;
   }
+`;
 
-  const handleClick = () => {
-    setClicked(true);
-    setInputHeight(addButtonHeight);
-    setInputFields([
-      ...inputFields,
-      {
-        id: inputFields.length + 1,
-        name: "input" + (inputFields.length + 1),
-        isVisible: true,
-      },
-    ]);
-
-    if (inputFields.length === 1) {
-      if (textArea.current) {
-        const inputWidth = textArea.current.offsetWidth;
-        const width = String(inputWidth - 52) + "px";
-        setInputWidth(width);
-
-        setTimeout(() => {
-          setInputWidth("100%");
-        }, 800);
-      }
-    }
-
-    if (largeInput.current) {
-      largeInput.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    }
-  };
-
-  const removeInput = (index: number) => {
-    setInputFields(
-      inputFields.map((input) => {
-        if (input.id === index) {
-          return { ...input, isVisible: false };
-        }
-        return input;
-      })
-    );
-
-    setTimeout(() => {
-      setInputFields(inputFields.filter((i) => i.id !== index));
-    }, 300);
-
-    if (inputFields.length === 2) {
-      setInputHeight(88);
-    }
-
-    setInputHeight(reduseButtonHeight);
-
-    if (inputFields.length === 2) {
-      setClicked(false);
-      setTimeout(() => {
-        setInputWidthReverse("100%");
-      }, 800);
-    }
-
-    if (inputFields.length === 2 && textArea.current) {
-      const inputWidth = textArea.current.offsetWidth;
-      const width = String(inputWidth + 52) + "px";
-      setInputWidthReverse(width);
-    }
-  };
-
+const MainContainer = ({
+  inputFields,
+  clicked,
+  inputHeight,
+  inputWidth,
+  inputWidthReverse,
+}: Props) => {
   return (
-    <TopSection animate={{ gap: clicked ? "24px" : "8px" }} ref={topSection}>
+    <TopSection animate={{ gap: clicked ? "24px" : "8px" }}>
       <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
         <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
           <Input placeholder="Your job title..." />
+          <ReloadButton>
+            <svg
+              id="Component_12_1"
+              data-name="Component 12 – 1"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="15"
+              viewBox="0 0 20 15"
+            >
+              <path
+                id="Union_13"
+                data-name="Union 13"
+                d="M6.169,17.447A7.556,7.556,0,0,1,6.139,2.6V0L8.865,2.6a7.556,7.556,0,0,1-.017,14.846V20Zm-4.5-7.428a5.871,5.871,0,0,0,4.559,5.728l2.622-2.5V15.73A5.878,5.878,0,0,0,8.731,4.281L6.139,6.751V4.311A5.872,5.872,0,0,0,1.667,10.019Z"
+                transform="translate(20) rotate(90)"
+                fill="#d9dee2"
+              />
+            </svg>
+          </ReloadButton>
         </Row>
 
         <Row gap="sm" style={{ flex: "1" }}>
@@ -201,7 +152,6 @@ const MainContainer = () => {
               flexDirection: clicked ? "column" : "row",
             }}
             transition={{ delay: clicked ? 0 : 0.6 }}
-            ref={textArea}
           >
             <motion.div
               style={{
@@ -218,7 +168,6 @@ const MainContainer = () => {
                 if (index.id === 1) {
                   return (
                     <InputContaner
-                      ref={largeInput}
                       key={index.id}
                       animate={{
                         height: clicked ? "48px" : "104px",
@@ -241,7 +190,6 @@ const MainContainer = () => {
                 }
                 return (
                   <InputContaner
-                    ref={largeInput}
                     className="input"
                     animate={{
                       width: index.isVisible ? "100%" : "0%",
@@ -256,75 +204,110 @@ const MainContainer = () => {
                       }}
                       placeholder={"Tasks..."}
                     />
-                    <DeleteButton
-                      animate={{
-                        opacity: index.isVisible ? "1" : "0",
-                      }}
-                      style={{
-                        transition: index.isVisible
-                          ? "all ease-in 1.4s"
-                          : "all ease-in 0.1s",
-                      }}
-                      onClick={() => removeInput(index.id)}
-                    >
+
+                    <ReloadButton>
                       <svg
+                        id="Component_12_1"
+                        data-name="Component 12 – 1"
                         xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="15.999"
-                        viewBox="0 0 14 15.999"
+                        width="20"
+                        height="15"
+                        viewBox="0 0 20 15"
                       >
                         <path
-                          id="Union_11"
-                          data-name="Union 11"
-                          d="M3,16a2,2,0,0,1-2-2V4H13V14a2,2,0,0,1-2,2ZM9.5,6.5v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0ZM0,3A2,2,0,0,1,2,1H5A1,1,0,0,1,6,0H8A1,1,0,0,1,9,1h3a2,2,0,0,1,2,2Z"
+                          id="Union_13"
+                          data-name="Union 13"
+                          d="M6.169,17.447A7.556,7.556,0,0,1,6.139,2.6V0L8.865,2.6a7.556,7.556,0,0,1-.017,14.846V20Zm-4.5-7.428a5.871,5.871,0,0,0,4.559,5.728l2.622-2.5V15.73A5.878,5.878,0,0,0,8.731,4.281L6.139,6.751V4.311A5.872,5.872,0,0,0,1.667,10.019Z"
+                          transform="translate(20) rotate(90)"
                           fill="#d9dee2"
                         />
                       </svg>
-                    </DeleteButton>
+                    </ReloadButton>
                   </InputContaner>
                 );
               })}
             </motion.div>
           </MultiInputs>
-          <Column
-            style={{
-              position: "absolute",
-              height: "fit-content",
-              width: "fit-content",
-              right: "7px",
-            }}
-            animate={{
-              position: clicked ? "relative" : "absolute",
-              right: clicked ? 0 : 7,
-            }}
-            transition={{ delay: clicked ? 0.2 : 0 }}
-          >
-            <AddTasks
-              onClick={handleClick}
-              animate={{
-                height: inputHeight,
-              }}
-            >
+          {clicked ? (
+            <ReloadButton>
               <svg
+                id="Component_12_1"
+                data-name="Component 12 – 1"
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
+                width="20"
+                height="15"
+                viewBox="0 0 20 15"
               >
                 <path
-                  id="Union_4"
-                  data-name="Union 4"
-                  d="M7,15V9H1A1,1,0,1,1,1,7H7V1A1,1,0,1,1,9,1V7h6a1,1,0,0,1,0,2H9v6a1,1,0,1,1-2,0Z"
+                  id="Union_13"
+                  data-name="Union 13"
+                  d="M6.169,17.447A7.556,7.556,0,0,1,6.139,2.6V0L8.865,2.6a7.556,7.556,0,0,1-.017,14.846V20Zm-4.5-7.428a5.871,5.871,0,0,0,4.559,5.728l2.622-2.5V15.73A5.878,5.878,0,0,0,8.731,4.281L6.139,6.751V4.311A5.872,5.872,0,0,0,1.667,10.019Z"
+                  transform="translate(20) rotate(90)"
                   fill="#d9dee2"
                 />
               </svg>
-            </AddTasks>
-          </Column>
+            </ReloadButton>
+          ) : (
+            <Column
+              style={{
+                position: "absolute",
+                height: "fit-content",
+                width: "fit-content",
+                right: "7px",
+              }}
+              animate={{
+                position: clicked ? "relative" : "absolute",
+                right: clicked ? 0 : 7,
+              }}
+              transition={{ delay: clicked ? 0.2 : 0 }}
+            >
+              <ReloadTask
+                animate={{
+                  height: inputHeight,
+                }}
+              >
+                <svg
+                  id="Component_12_1"
+                  data-name="Component 12 – 1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="15"
+                  viewBox="0 0 20 15"
+                >
+                  <path
+                    id="Union_13"
+                    data-name="Union 13"
+                    d="M6.169,17.447A7.556,7.556,0,0,1,6.139,2.6V0L8.865,2.6a7.556,7.556,0,0,1-.017,14.846V20Zm-4.5-7.428a5.871,5.871,0,0,0,4.559,5.728l2.622-2.5V15.73A5.878,5.878,0,0,0,8.731,4.281L6.139,6.751V4.311A5.872,5.872,0,0,0,1.667,10.019Z"
+                    transform="translate(20) rotate(90)"
+                    fill="#d9dee2"
+                  />
+                </svg>
+              </ReloadTask>
+            </Column>
+          )}
         </Row>
       </Row>
 
       <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
         <Input placeholder="Brief statment of your role" />
+        <ReloadButton>
+          <svg
+            id="Component_12_1"
+            data-name="Component 12 – 1"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="15"
+            viewBox="0 0 20 15"
+          >
+            <path
+              id="Union_13"
+              data-name="Union 13"
+              d="M6.169,17.447A7.556,7.556,0,0,1,6.139,2.6V0L8.865,2.6a7.556,7.556,0,0,1-.017,14.846V20Zm-4.5-7.428a5.871,5.871,0,0,0,4.559,5.728l2.622-2.5V15.73A5.878,5.878,0,0,0,8.731,4.281L6.139,6.751V4.311A5.872,5.872,0,0,0,1.667,10.019Z"
+              transform="translate(20) rotate(90)"
+              fill="#d9dee2"
+            />
+          </svg>
+        </ReloadButton>
       </Row>
     </TopSection>
   );
