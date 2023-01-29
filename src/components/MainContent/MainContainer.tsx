@@ -132,13 +132,13 @@ const MainContainer = ({
   const [inputWidthReverse, setInputWidthReverse] = useState("100%");
   const [resultsContWidth, setResultsContWidth] = useState("");
   const [resultsContPadding, setResultsContPadding] = useState("");
-  const [resultsColumnDiv, setresultsColumnDiv] = useState(false);
+  // const [resultsColumnDiv, setresultsColumnDiv] = useState(false);
   const [width] = useWindowSize();
 
   useEffect(() => {
     if (width < 1420) {
       setResultsContWidth("562px");
-      setresultsColumnDiv(true);
+      // setresultsColumnDiv(true);
     }
     if (width < 820) {
       setResultsContWidth("100%");
@@ -152,7 +152,7 @@ const MainContainer = ({
     }
     if (width > 1420) {
       setResultsContWidth("512px");
-      setresultsColumnDiv(false);
+      // setresultsColumnDiv(false);
     }
   }, [width]);
 
