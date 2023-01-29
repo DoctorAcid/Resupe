@@ -432,7 +432,7 @@ const MainContainer = ({
 
       {submitHandler ? (
         <>
-          {resultsColumnDiv ? (
+          {/* {resultsColumnDiv ? (
             <motion.div
               style={{
                 position: "relative",
@@ -577,7 +577,7 @@ const MainContainer = ({
                 </Column>
               </motion.div>
             </motion.div>
-          )}
+          )} */}
 
           <ResultsWrap
             style={{
@@ -595,13 +595,15 @@ const MainContainer = ({
             <ResultsContWrap
               style={{
                 position: "relative",
-                marginLeft: "-256px",
-                scaleX: 0,
+                // marginLeft: "-256px",
+                // scaleX: 0,
                 width: resultsContWidth,
+                opacity: 0,
               }}
               animate={{
-                marginLeft: submitHandler ? "0px" : "-256px",
-                scaleX: submitHandler ? 1 : 0,
+                // marginLeft: submitHandler ? "0px" : "-256px",
+                // scaleX: submitHandler ? 1 : 0,
+                opacity: submitHandler ? 1 : 0,
               }}
               transition={{ duration: 1, delay: 1 }}
             >
