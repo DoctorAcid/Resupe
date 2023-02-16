@@ -287,18 +287,18 @@ const Main = () => {
     }
   }, [entryInputs.length]);
 
-  function contentHeightSetting(index: number) {
-    if (clicked || reRender) {
-      setEntryInputs(
-        entryInputs.map((input) => {
-          if (input.id === index) {
-            return { ...input, height: contentHeight };
-          }
-          return input;
-        })
-      );
-    }
-  }
+  // function contentHeightSetting(index: number) {
+  //   if (clicked || reRender) {
+  //     setEntryInputs(
+  //       entryInputs.map((input) => {
+  //         if (input.id === index) {
+  //           return { ...input, height: contentHeight };
+  //         }
+  //         return input;
+  //       })
+  //     );
+  //   }
+  // }
 
   function popUp(text: string) {
     setPopUpOpacity(true);

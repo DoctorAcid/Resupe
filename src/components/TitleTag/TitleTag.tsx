@@ -87,7 +87,7 @@ const TitleTag = ({
         setToolTipOpacity(false);
       });
     }
-  }, [toolTipOpacity]);
+  });
 
   const Opacity = String(titleOpacity);
 
