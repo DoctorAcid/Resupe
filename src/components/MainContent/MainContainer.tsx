@@ -19,6 +19,9 @@ interface Props {
   titleOpacity: boolean;
   topPosition: boolean;
   submitHandler: boolean;
+  toolTipOpacity?: boolean;
+  setToolTipContent: React.Dispatch<React.SetStateAction<string>>;
+  setToolTipOpacity: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AddTasks = styled(motion.button)`
@@ -95,16 +98,18 @@ const InputContaner = styled(motion.div)`
 `;
 
 const TopSection = styled(Column)`
-  flex: 1;
+  flex: 49%;
   gap: 8px;
+  max-width: 800px;
 `;
 
 const FlexWrap = styled(motion.div)`
   display: flex;
   flex-wrap: wrap;
   gap: 48px;
+  width: 100%;
   align-items: flex-end;
-  @media (max-width: 1420px) {
+  @media (max-width: 1346px) {
     flex-direction: column;
   }
 `;
@@ -118,6 +123,9 @@ const MainContainer = ({
   setTopPosition,
   titleOpacity,
   submitHandler,
+  toolTipOpacity,
+  setToolTipContent,
+  setToolTipOpacity,
 }: Props) => {
   const textArea = useRef<HTMLDivElement>(null);
   const largeInput = useRef<HTMLDivElement>(null);
@@ -131,27 +139,33 @@ const MainContainer = ({
   const [inputWidth, setInputWidth] = useState("");
   const [inputWidthReverse, setInputWidthReverse] = useState("100%");
   const [resultsContWidth, setResultsContWidth] = useState("");
+  const [resultsContHeight, setResultsContHeight] = useState("220px");
   const [resultsContPadding, setResultsContPadding] = useState("");
   // const [resultsColumnDiv, setresultsColumnDiv] = useState(false);
+  const [toolTip, setToolTip] = useState("");
+
   const [width] = useWindowSize();
 
   useEffect(() => {
-    if (width < 1420) {
-      setResultsContWidth("562px");
-      // setresultsColumnDiv(true);
+    if (toolTip) {
+      setToolTipContent(toolTip);
     }
-    if (width < 820) {
+  });
+
+  useEffect(() => {
+    if (width < 1346) {
       setResultsContWidth("100%");
+      setResultsContHeight("max-content");
       setResultsContPadding("174px");
+      // setresultsColumnDiv(true);
     }
     if (width < 742) {
       setResultsContPadding("0px");
     }
-    if (width > 820) {
-      setResultsContPadding("0px");
-    }
-    if (width > 1420) {
+    if (width > 1346) {
       setResultsContWidth("512px");
+      setResultsContHeight("220px");
+      setResultsContPadding("0px");
       // setresultsColumnDiv(false);
     }
   }, [width]);
@@ -249,6 +263,10 @@ const MainContainer = ({
               justify="fe"
               title="Job Lists"
               titleOpacity={titleOpacity}
+              tooltip="Just or nothing to say I wrote this text!"
+              setToolTip={setToolTip}
+              setToolTipOpacity={setToolTipOpacity}
+              toolTipOpacity={toolTipOpacity}
             />
             <Input placeholder="Your job title..." />
           </Row>
@@ -259,6 +277,10 @@ const MainContainer = ({
                 title="Start Date"
                 marginLeft="14px"
                 titleOpacity={titleOpacity}
+                tooltip="Just or nothing to say I wrote this text!"
+                setToolTip={setToolTip}
+                setToolTipOpacity={setToolTipOpacity}
+                toolTipOpacity={toolTipOpacity}
               />
               <Input type={"date"} placeholder="__/__/___" />
             </Column>
@@ -268,6 +290,10 @@ const MainContainer = ({
                 title="End Date"
                 marginLeft="14px"
                 titleOpacity={titleOpacity}
+                tooltip="Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!"
+                setToolTip={setToolTip}
+                setToolTipOpacity={setToolTipOpacity}
+                toolTipOpacity={toolTipOpacity}
               />
               <Input
                 className="smallInput"
@@ -283,6 +309,10 @@ const MainContainer = ({
             align="fs"
             title="Tasks, Responsibilities,& Achievements"
             titleOpacity={titleOpacity}
+            tooltip="Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!"
+            setToolTip={setToolTip}
+            setToolTipOpacity={setToolTipOpacity}
+            toolTipOpacity={toolTipOpacity}
           />
           <Row
             gap="sm"
@@ -360,7 +390,7 @@ const MainContainer = ({
                             : "all ease-in 0.1s",
                         }}
                         onClick={() => removeInput(index.id)}
-                        disabled={submitHandler}
+                        // disabled={submitHandler}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -399,7 +429,7 @@ const MainContainer = ({
                 animate={{
                   height: inputHeight,
                 }}
-                disabled={submitHandler}
+                // disabled={submitHandler}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -425,6 +455,10 @@ const MainContainer = ({
             justify="fe"
             title="A Broad Sentence Describing The Role"
             titleOpacity={titleOpacity}
+            tooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+            setToolTip={setToolTip}
+            setToolTipOpacity={setToolTipOpacity}
+            toolTipOpacity={toolTipOpacity}
           />
           <Input placeholder="Brief statment of your role" />
         </Row>
@@ -579,15 +613,26 @@ const MainContainer = ({
             </motion.div>
           )} */}
 
+          {/* <div
+            style={{ border: "2px solid red", width: "100%", flex: "1" }}
+          ></div> */}
+
           <ResultsWrap
             style={{
-              position: "absolute",
+              display: "flex",
+              // flex: "49%",
+              position: "relative",
+              flexWrap: "wrap",
+              alignItems: "flex-end",
+              height: resultsContHeight,
               width: "0px",
               overflow: "hidden",
               paddingLeft: resultsContPadding,
+              maxWidth: resultsContWidth,
+              // border: "2px solid red",
             }}
             animate={{
-              position: submitHandler ? "relative" : "absolute",
+              // position: submitHandler ? "relative" : "absolute",
               width: submitHandler ? resultsContWidth : "0px",
             }}
             transition={{ duration: 1 }}
@@ -595,9 +640,11 @@ const MainContainer = ({
             <ResultsContWrap
               style={{
                 position: "relative",
+                display: "flex",
+                // flex: "49%",
                 // marginLeft: "-256px",
                 // scaleX: 0,
-                width: resultsContWidth,
+                width: "100%",
                 opacity: 0,
               }}
               animate={{

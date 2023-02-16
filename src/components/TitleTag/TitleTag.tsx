@@ -3,12 +3,15 @@ import styled from "styled-components";
 
 interface Props {
   title: string;
-  hint?: string;
   marginLeft?: string;
   width?: string;
   justify?: "sb" | "fe" | "c";
   align?: "sb" | "fs" | "fe";
   titleOpacity: boolean;
+  tooltip?: string;
+  toolTipOpacity?: boolean;
+  setToolTip: React.Dispatch<React.SetStateAction<string>>;
+  setToolTipOpacity: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Wrapper = styled.div<{
@@ -57,63 +60,34 @@ const Hint = styled.div`
   margin-top: 1px;
 `;
 
-const Popup = styled.div`
-  display: flex;
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 24px;
-  width: 0;
-  height: 0px;
-  opacity: 0;
-  z-index: -1;
-  background-color: #6d7378;
-
-  padding: 14px;
-  border-radius: 12px;
-  transition: all ease-in 0.3s;
-  cursor: context-menu;
-  overflow-x: auto;
-`;
-
-const Span = styled.span`
-  color: #f8f8f8;
-  font-size: 12px;
-  height: fit-content;
-`;
-
 const TitleTag = ({
   title,
   marginLeft,
-  hint,
   width,
   justify,
   align,
   titleOpacity,
+  tooltip,
+  setToolTip,
+  toolTipOpacity,
+  setToolTipOpacity,
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-  const popup = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (ref.current) {
       ref.current.addEventListener("mouseover", () => {
-        if (popup.current) {
-          popup.current.style.opacity = "1";
-          popup.current.style.height = "200px";
-          popup.current.style.width = "160px";
-          popup.current.style.zIndex = "1";
+        if (tooltip) {
+          setToolTip(tooltip);
         }
+        setToolTipOpacity(true);
       });
 
       ref.current.addEventListener("mouseout", () => {
-        if (popup.current) {
-          popup.current.style.opacity = "0";
-          popup.current.style.height = "0";
-          popup.current.style.width = "0";
-          popup.current.style.zIndex = "-1";
-        }
+        setToolTipOpacity(false);
       });
     }
-  });
+  }, [toolTipOpacity]);
 
   const Opacity = String(titleOpacity);
 
@@ -127,18 +101,6 @@ const TitleTag = ({
     >
       <h3>{title}</h3>
       <Hint ref={ref}>
-        <Popup ref={popup}>
-          <Span>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. Lorem Ipsum is simply
-            dummy text of the printing and typesetting industry. Lorem Ipsum has
-            been the industry's standard dummy text ever since the 1500s, when
-            an unknown printer took a galley of type and scrambled it to make a
-            type specimen book.
-          </Span>
-        </Popup>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="14"

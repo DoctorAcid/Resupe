@@ -12,7 +12,7 @@ export const Input = styled(motion.input)`
   outline: none;
   color: #6d7378;
   background-color: #f1f3f3;
-  min-width: 128px;
+  min-width: 104px;
   ::placeholder {
     color: #a9adb0;
   }

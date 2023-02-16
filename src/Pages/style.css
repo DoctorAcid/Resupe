@@ -1,3 +1,10 @@
+.ROOT_CSS {
+    display: flex;
+    justify-content: flex-end;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
 .mainContent::before {
     content: "";
     width: 100%;

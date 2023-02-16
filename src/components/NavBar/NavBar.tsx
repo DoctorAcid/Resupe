@@ -10,6 +10,7 @@ const NavWrap = styled.div`
   left: 0;
   top: 0;
   padding: 0 64px;
+  z-index: 1;
 
   @media (max-width: 640px) {
     padding: 24px;
