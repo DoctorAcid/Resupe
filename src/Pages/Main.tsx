@@ -239,7 +239,7 @@ const Main = () => {
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(false);
   const [submitHandler, setSubmitHandler] = useState(false);
-  const [contentHeight, setContentHeight] = useState("337px");
+  // const [contentHeight, setContentHeight] = useState("337px");
   const [toolTipContent, setToolTipContent] = useState("");
   const [toolTipOpacity, setToolTipOpacity] = useState(false);
 
@@ -279,7 +279,7 @@ const Main = () => {
         });
       }
     }
-  }, [clicked]);
+  }, [clicked, topPosition]);
 
   useEffect(() => {
     if (entryInputs.length > 1) {
