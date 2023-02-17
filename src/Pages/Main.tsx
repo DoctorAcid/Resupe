@@ -152,6 +152,7 @@ const DeleteButton = styled(motion.div)`
 
   &:hover {
     background-color: #fff;
+    border: 2px solid transparent;
   }
 
   &:hover svg path {
