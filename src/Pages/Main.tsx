@@ -109,28 +109,30 @@ const ContentWrap = styled(motion.div)`
   justify-content: center;
   align-items: center;
   padding: 128px 0;
+  max-width: 100%;
   @media (max-width: 742px) {
     padding: 64px 0;
   }
 `;
 
 const Content = styled(motion.div)`
+  width: 100%;
   position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   overflow: hidden;
-  // margin-top: -48px;
+  padding-left: 174px;
   @media (max-width: 742px) {
-    // transform: scaleX(0);
+    padding-left: 0px;
   }
 `;
 
 const CurrentContent = styled(motion.div)`
   @media (max-width: 742px) {
     flex-direction: column;
-    align-items: center;
-    gap: 16px;
+    justify-content: flex-end;
+    gap: 32px;
   }
 `;
 
@@ -139,10 +141,11 @@ const DeleteButton = styled(motion.div)`
   position: absolute;
   justify-content: center;
   align-items: center;
-  width: 64px;
-  height: 64px;
-  left: 64px;
-  background-color: #f1f3f3;
+  width: 52px;
+  height: 100%;
+  padding: 12px 16px;
+  left: -128px;
+  border: 2px solid #f1f3f3;
   border-radius: 32px;
   transition: all ease-in 0.3s;
   z-index: 1;
@@ -158,7 +161,7 @@ const DeleteButton = styled(motion.div)`
 
   @media (max-width: 742px) {
     position: relative;
-    width: 44px;
+    width: 100%;
     height: 44px;
     left: 0;
 
@@ -236,19 +239,23 @@ const Main = () => {
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(false);
   const [submitHandler, setSubmitHandler] = useState(false);
-  const [contentHeight, setContentHeight] = useState("");
+  const [contentHeight, setContentHeight] = useState("337px");
   const [toolTipContent, setToolTipContent] = useState("");
   const [toolTipOpacity, setToolTipOpacity] = useState(false);
 
-  useEffect(() => {
-    if (mainContent.current) {
-      const contHeight = String(mainContent.current.offsetHeight) + "px";
-      setContentHeight(contHeight);
-    }
-    // setTimeout(() => {
-    //   setContentHeight("max-content");
-    // }, 1000);
-  }, [clicked, reRender]);
+  // useEffect(() => {
+  //   if (mainContent.current) {
+  //     const contHeight = String(mainContent.current.offsetHeight) + "px";
+  //     setContentHeight(contHeight);
+  //   }
+  //   setTimeout(() => {
+  //     setContentHeight("max-content");
+  //   }, 1000);
+  // }, [clicked, reRender]);
+
+  // useEffect(() => {
+  //   setContentHeight("max-content");
+  // }, [reRender]);
 
   useEffect(() => {
     if (mainWrap.current) {
@@ -262,17 +269,17 @@ const Main = () => {
     }
   }, [clicked, reRender]);
 
-  // useEffect(() => {
-  //   if (topPosition) {
-  //     if (newEntry.current) {
-  //       newEntry.current.scrollIntoView({
-  //         behavior: "smooth",
-  //         block: "center",
-  //         inline: "center",
-  //       });
-  //     }
-  //   }
-  // }, [clicked]);
+  useEffect(() => {
+    if (topPosition) {
+      if (newEntry.current) {
+        newEntry.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
+        });
+      }
+    }
+  }, [clicked]);
 
   useEffect(() => {
     if (entryInputs.length > 1) {
@@ -300,6 +307,26 @@ const Main = () => {
   //   }
   // }
 
+  // function ContainerHeight() {
+  //   if (clicked) {
+  //     if (mainContent.current) {
+  //       const contHeight = "337px";
+  //       setContentHeight(contHeight);
+  //     }
+  //   }
+
+  //   if (!clicked) {
+  //     if (mainContent.current) {
+  //       const contHeight = String(mainContent.current.offsetHeight) + "px";
+  //       setContentHeight(contHeight);
+  //     }
+  //   }
+
+  //   // setTimeout(() => {
+  //   //   setContentHeight("max-content");
+  //   // }, 1000);
+  // }
+
   function popUp(text: string) {
     setPopUpOpacity(true);
 
@@ -311,6 +338,7 @@ const Main = () => {
   }
 
   const handleEntry = () => {
+    // ContainerHeight();
     setEntryInputs([
       ...entryInputs,
       {
@@ -341,11 +369,9 @@ const Main = () => {
   };
 
   const removeContent = (index: number) => {
+    // ContainerHeight();
     setClicked(!clicked);
     popUp("Removed");
-    setTimeout(() => {
-      setEntryInputs(entryInputs.filter((i) => i.id !== index));
-    }, 1000);
 
     setEntryInputs(
       entryInputs.map((input) => {
@@ -355,6 +381,10 @@ const Main = () => {
         return input;
       })
     );
+
+    setTimeout(() => {
+      setEntryInputs(entryInputs.filter((i) => i.id !== index));
+    }, 1000);
   };
 
   return (
@@ -391,6 +421,7 @@ const Main = () => {
                       titleOpacity={true}
                       setTopPosition={setReRender}
                       submitHandler={submitHandler}
+                      titleSection={true}
                       setToolTipContent={setToolTipContent}
                       setToolTipOpacity={setToolTipOpacity}
                       toolTipOpacity={toolTipOpacity}
@@ -403,12 +434,15 @@ const Main = () => {
                   className="content mainContent"
                   ref={newEntry}
                   style={{
-                    height: "0px",
+                    height: "max-content",
                     opacity: 0,
+                    paddingTop: "0px",
+                    paddingBottom: "0px",
                     // border: "2px solid red",
                   }}
                   animate={{
-                    height: index.isVisible ? contentHeight : "0px",
+                    paddingTop: index.isVisible ? "48px" : "0px",
+                    paddingBottom: index.isVisible ? "48px" : "0px",
                     opacity: index.isVisible ? 1 : 0,
                   }}
                   transition={{
@@ -421,14 +455,18 @@ const Main = () => {
                     style={{
                       position: "relative",
                       display: "flex",
-                      alignItems: "center",
+                      alignItems: "flex-end",
                       opacity: 0,
-                      padding: "48px 0",
+                      // padding: "48px 0",
+                      height: "0%",
+                      width: "100%",
                       // marginTop: "-112px",
                       // scaleY: 0,
                       top: 0,
                     }}
                     animate={{
+                      height: index.isVisible ? "max-content" : "0%",
+                      // padding: index.isVisible ? "4em 0em" : "0em",
                       // marginTop: index.isVisible ? "0px" : "-112px",
                       // scaleY: index.isVisible ? 1 : 0,
                       // padding: index.isVisible ? "48px 0" : "0px",
@@ -444,6 +482,7 @@ const Main = () => {
                       setTopPosition={setReRender}
                       titleOpacity={false}
                       submitHandler={submitHandler}
+                      titleSection={false}
                       setToolTipContent={setToolTipContent}
                       setToolTipOpacity={setToolTipOpacity}
                       toolTipOpacity={toolTipOpacity}

@@ -20,6 +20,7 @@ interface Props {
   topPosition: boolean;
   submitHandler: boolean;
   toolTipOpacity?: boolean;
+  titleSection: boolean;
   setToolTipContent: React.Dispatch<React.SetStateAction<string>>;
   setToolTipOpacity: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -101,6 +102,7 @@ const TopSection = styled(Column)`
   flex: 49%;
   gap: 8px;
   max-width: 800px;
+  // border: 2px solid red;
 `;
 
 const FlexWrap = styled(motion.div)`
@@ -126,6 +128,7 @@ const MainContainer = ({
   toolTipOpacity,
   setToolTipContent,
   setToolTipOpacity,
+  titleSection,
 }: Props) => {
   const textArea = useRef<HTMLDivElement>(null);
   const largeInput = useRef<HTMLDivElement>(null);
@@ -198,6 +201,8 @@ const MainContainer = ({
       },
     ]);
 
+    setResultsContHeight("max-content");
+
     if (inputFields.length === 1) {
       if (textArea.current) {
         const inputWidth = textArea.current.offsetWidth;
@@ -259,42 +264,48 @@ const MainContainer = ({
       <TopSection animate={{ gap: clicked ? "24px" : "8px" }} ref={topSection}>
         <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
           <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
-            <TitleTag
-              justify="fe"
-              title="Job Lists"
-              titleOpacity={titleOpacity}
-              tooltip="Just or nothing to say I wrote this text!"
-              setToolTip={setToolTip}
-              setToolTipOpacity={setToolTipOpacity}
-              toolTipOpacity={toolTipOpacity}
-            />
-            <Input placeholder="Your job title..." />
-          </Row>
-
-          <Row gap="sm" style={{ flex: "1" }}>
-            <Column gap="sm">
+            {titleSection ? (
               <TitleTag
-                title="Start Date"
-                marginLeft="14px"
+                justify="fe"
+                title="Job Lists"
                 titleOpacity={titleOpacity}
                 tooltip="Just or nothing to say I wrote this text!"
                 setToolTip={setToolTip}
                 setToolTipOpacity={setToolTipOpacity}
                 toolTipOpacity={toolTipOpacity}
               />
+            ) : null}
+            <Input placeholder="Your job title..." />
+          </Row>
+
+          <Row gap="sm" style={{ flex: "1" }}>
+            <Column gap="sm">
+              {titleSection ? (
+                <TitleTag
+                  title="Start Date"
+                  marginLeft="14px"
+                  titleOpacity={titleOpacity}
+                  tooltip="Just or nothing to say I wrote this text!"
+                  setToolTip={setToolTip}
+                  setToolTipOpacity={setToolTipOpacity}
+                  toolTipOpacity={toolTipOpacity}
+                />
+              ) : null}
               <Input type={"date"} placeholder="__/__/___" />
             </Column>
 
             <Column gap="sm">
-              <TitleTag
-                title="End Date"
-                marginLeft="14px"
-                titleOpacity={titleOpacity}
-                tooltip="Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!"
-                setToolTip={setToolTip}
-                setToolTipOpacity={setToolTipOpacity}
-                toolTipOpacity={toolTipOpacity}
-              />
+              {titleSection ? (
+                <TitleTag
+                  title="End Date"
+                  marginLeft="14px"
+                  titleOpacity={titleOpacity}
+                  tooltip="Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!"
+                  setToolTip={setToolTip}
+                  setToolTipOpacity={setToolTipOpacity}
+                  toolTipOpacity={toolTipOpacity}
+                />
+              ) : null}
               <Input
                 className="smallInput"
                 type={"date"}
@@ -305,15 +316,17 @@ const MainContainer = ({
         </Row>
 
         <Row className="shiftTitle" align="fs" justify="c" gap="md">
-          <TitleTag
-            align="fs"
-            title="Tasks, Responsibilities,& Achievements"
-            titleOpacity={titleOpacity}
-            tooltip="Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!"
-            setToolTip={setToolTip}
-            setToolTipOpacity={setToolTipOpacity}
-            toolTipOpacity={toolTipOpacity}
-          />
+          {titleSection ? (
+            <TitleTag
+              align="fs"
+              title="Tasks, Responsibilities,& Achievements"
+              titleOpacity={titleOpacity}
+              tooltip="Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!"
+              setToolTip={setToolTip}
+              setToolTipOpacity={setToolTipOpacity}
+              toolTipOpacity={toolTipOpacity}
+            />
+          ) : null}
           <Row
             gap="sm"
             animate={{
@@ -450,16 +463,18 @@ const MainContainer = ({
         </Row>
 
         <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
-          <TitleTag
-            align="fs"
-            justify="fe"
-            title="A Broad Sentence Describing The Role"
-            titleOpacity={titleOpacity}
-            tooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-            setToolTip={setToolTip}
-            setToolTipOpacity={setToolTipOpacity}
-            toolTipOpacity={toolTipOpacity}
-          />
+          {titleSection ? (
+            <TitleTag
+              align="fs"
+              justify="fe"
+              title="A Broad Sentence Describing The Role"
+              titleOpacity={titleOpacity}
+              tooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+              setToolTip={setToolTip}
+              setToolTipOpacity={setToolTipOpacity}
+              toolTipOpacity={toolTipOpacity}
+            />
+          ) : null}
           <Input placeholder="Brief statment of your role" />
         </Row>
       </TopSection>

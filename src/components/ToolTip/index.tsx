@@ -9,7 +9,7 @@ interface Props {
 
 const Wrapper = styled(motion.div)`
   position: absolute;
-  top: 64px;
+  top: 24px;
   display: flex;
   gap: 12px;
   width: max-content;
