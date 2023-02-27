@@ -6,7 +6,7 @@ import { Input, LargeInput } from "../Inputs/inputs";
 import TitleTag from "../TitleTag/TitleTag";
 import { motion } from "framer-motion";
 import ResultsContainer from "./ResultsContainer";
-import { useWindowSize } from "../../custom_hooks/useWindowSize";
+// import { useWindowSize } from "../../custom_hooks/useWindowSize";
 
 interface InputItems {
   id: number;
@@ -23,6 +23,9 @@ interface Props {
   titleSection: boolean;
   setToolTipContent: React.Dispatch<React.SetStateAction<string>>;
   setToolTipOpacity: React.Dispatch<React.SetStateAction<boolean>>;
+  resultsContPad?: string;
+  resultsMaxWidth?: string;
+  resultsContWidth?: string;
 }
 
 const AddTasks = styled(motion.button)`
@@ -111,7 +114,8 @@ const FlexWrap = styled(motion.div)`
   gap: 48px;
   width: 100%;
   align-items: flex-end;
-  @media (max-width: 1346px) {
+  justify-content: center;
+  @media (max-width: 1413px) {
     flex-direction: column;
   }
 `;
@@ -129,6 +133,9 @@ const MainContainer = ({
   setToolTipContent,
   setToolTipOpacity,
   titleSection,
+  resultsContPad,
+  resultsMaxWidth,
+  resultsContWidth,
 }: Props) => {
   const textArea = useRef<HTMLDivElement>(null);
   const largeInput = useRef<HTMLDivElement>(null);
@@ -141,13 +148,32 @@ const MainContainer = ({
   const [inputHeight, setInputHeight] = useState(88);
   const [inputWidth, setInputWidth] = useState("");
   const [inputWidthReverse, setInputWidthReverse] = useState("100%");
-  const [resultsContWidth, setResultsContWidth] = useState("");
-  const [resultsContHeight, setResultsContHeight] = useState("220px");
-  const [resultsContPadding, setResultsContPadding] = useState("");
+  // const [resultsContWidth, setResultsContWidth] = useState("512px");
+  // const [resultsContHeight, setResultsContHeight] = useState("220px");
+  // const [resultsContPadding, setResultsContPadding] = useState("");
+  // const [entryFlag, setEntryFlag] = useState(false);
   // const [resultsColumnDiv, setresultsColumnDiv] = useState(false);
+  // const [maxWidth, setMaxWidth] = useState("800px");
   const [toolTip, setToolTip] = useState("");
 
-  const [width] = useWindowSize();
+  // const [width] = useWindowSize();
+
+  // useEffect(() => {
+  //   if (entryLenght > 1) {
+  //     setEntryFlag(true);
+  //   }
+  //   if (entryLenght < 1) {
+  //     setEntryFlag(false);
+  //   }
+  // }, [clicked]);
+
+  // useEffect(() => {
+  //   if (!submitHandler) {
+  //     if (entryLenght > 1) {
+  //       setMaxWidth("562px");
+  //     }
+  //   }
+  // }, [clicked]);
 
   useEffect(() => {
     if (toolTip) {
@@ -155,23 +181,32 @@ const MainContainer = ({
     }
   });
 
-  useEffect(() => {
-    if (width < 1346) {
-      setResultsContWidth("100%");
-      setResultsContHeight("max-content");
-      setResultsContPadding("174px");
-      // setresultsColumnDiv(true);
-    }
-    if (width < 742) {
-      setResultsContPadding("0px");
-    }
-    if (width > 1346) {
-      setResultsContWidth("512px");
-      setResultsContHeight("220px");
-      setResultsContPadding("0px");
-      // setresultsColumnDiv(false);
-    }
-  }, [width]);
+  // useEffect(() => {
+  //   if (width < 1346) {
+  //     setResultsContWidth("100%");
+  //     setResultsContHeight("max-content");
+  //     setResultsContPadding("174px");
+  //     setresultsColumnDiv(true);
+  //   }
+  //   if (width < 742) {
+  //     setResultsContPadding("0px");
+  //   }
+  //   if (width > 1346) {
+  //     setResultsContWidth("512px");
+  //     setResultsContHeight("220px");
+  //     setResultsContPadding("0px");
+  //     setresultsColumnDiv(false);
+  //   }
+  // }, [width]);
+
+  // useEffect(() => {
+  //   if (width < 1414) {
+  //     setResultsContWidth("565px");
+  //   }
+  //   if (width > 1414) {
+  //     setResultsContWidth("512px");
+  //   }
+  // }, [width]);
 
   function addButtonHeight() {
     if (inputFields.length === 1) {
@@ -201,7 +236,7 @@ const MainContainer = ({
       },
     ]);
 
-    setResultsContHeight("max-content");
+    // setResultsContHeight("max-content");
 
     if (inputFields.length === 1) {
       if (textArea.current) {
@@ -261,7 +296,15 @@ const MainContainer = ({
 
   return (
     <FlexWrap>
-      <TopSection animate={{ gap: clicked ? "24px" : "8px" }} ref={topSection}>
+      <TopSection
+        animate={{
+          // gap: clicked ? "24px" : "8px",
+          // maxWidth: submitHandler ? "800px" : maxWidth,
+          maxWidth: resultsMaxWidth ? resultsMaxWidth : "800px",
+        }}
+        transition={{ delay: submitHandler ? 1 : 0 }}
+        ref={topSection}
+      >
         <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
           <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
             {titleSection ? (
@@ -639,16 +682,16 @@ const MainContainer = ({
               position: "relative",
               flexWrap: "wrap",
               alignItems: "flex-end",
-              height: resultsContHeight,
-              width: "0px",
+              height: "max-content",
+              width: "0%",
               overflow: "hidden",
-              paddingLeft: resultsContPadding,
+              paddingLeft: resultsContPad ? resultsContPad : "0px",
               maxWidth: resultsContWidth,
               // border: "2px solid red",
             }}
             animate={{
               // position: submitHandler ? "relative" : "absolute",
-              width: submitHandler ? resultsContWidth : "0px",
+              width: submitHandler ? "100%" : "0%",
             }}
             transition={{ duration: 1 }}
           >
@@ -673,8 +716,8 @@ const MainContainer = ({
                 inputFields={inputFields}
                 clicked={clicked}
                 inputHeight={inputHeight}
-                inputWidth={inputWidth}
-                inputWidthReverse={inputWidthReverse}
+                // inputWidth={inputWidth}
+                // inputWidthReverse={inputWidthReverse}
               />
             </ResultsContWrap>
           </ResultsWrap>

@@ -8,6 +8,7 @@ import "./style.css";
 import { motion } from "framer-motion";
 import ScrollToBottom from "react-scroll-to-bottom";
 import ToolTip from "../components/ToolTip";
+import { useWindowSize } from "../custom_hooks/useWindowSize";
 
 const Wrap = styled(motion.div)`
   display: flex;
@@ -231,7 +232,7 @@ const Main = () => {
   const mainContent = useRef<HTMLDivElement>(null);
 
   const [entryInputs, setEntryInputs] = useState([
-    { id: 1, name: "input1", isVisible: false },
+    { id: 1, name: "input1", isVisible: false, isSubmit: false },
   ]);
 
   const [reRender, setReRender] = useState(false);
@@ -239,10 +240,31 @@ const Main = () => {
   const [popUpOpacity, setPopUpOpacity] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(false);
-  const [submitHandler, setSubmitHandler] = useState(false);
+  // const [submitHandler, setSubmitHandler] = useState(false);
   // const [contentHeight, setContentHeight] = useState("337px");
+  const [resultsContPad, setResultsContPad] = useState("");
   const [toolTipContent, setToolTipContent] = useState("");
   const [toolTipOpacity, setToolTipOpacity] = useState(false);
+  const [primaryResultsContWidth, setPrimaryResultsContWidth] =
+    useState("512px");
+  const [resultsContWidth, setResultsContWidth] = useState("512px");
+  const [width] = useWindowSize();
+
+  useEffect(() => {
+    if (width < 1414) {
+      setResultsContWidth("565px");
+      setPrimaryResultsContWidth("");
+      setResultsContPad("174px");
+    }
+    if (width < 742) {
+      setResultsContPad("0px");
+    }
+    if (width > 1413) {
+      setResultsContWidth("512px");
+      setPrimaryResultsContWidth("512px");
+      setResultsContPad("0px");
+    }
+  }, [width]);
 
   // useEffect(() => {
   //   if (mainContent.current) {
@@ -338,6 +360,17 @@ const Main = () => {
     }, 1200);
   }
 
+  function removeContainerVisibility(index: number) {
+    setEntryInputs(
+      entryInputs.map((input) => {
+        if (input.id === index) {
+          return { ...input, isVisible: false };
+        }
+        return input;
+      })
+    );
+  }
+
   const handleEntry = () => {
     // ContainerHeight();
     setEntryInputs([
@@ -346,6 +379,7 @@ const Main = () => {
         id: entryInputs.length + 1,
         name: "input" + String(entryInputs.length + 1),
         isVisible: true,
+        isSubmit: false,
       },
     ]);
 
@@ -356,7 +390,13 @@ const Main = () => {
 
   const handleSubmit = () => {
     setClicked(!clicked);
-    setSubmitHandler(true);
+    // setSubmitHandler(true);
+
+    setEntryInputs(
+      entryInputs.map((input) => {
+        return { ...input, isSubmit: true };
+      })
+    );
 
     popUp("Submited");
 
@@ -374,18 +414,11 @@ const Main = () => {
     setClicked(!clicked);
     popUp("Removed");
 
-    setEntryInputs(
-      entryInputs.map((input) => {
-        if (input.id === index) {
-          return { ...input, isVisible: false };
-        }
-        return input;
-      })
-    );
+    removeContainerVisibility(index);
 
     setTimeout(() => {
       setEntryInputs(entryInputs.filter((i) => i.id !== index));
-    }, 1000);
+    }, 800);
   };
 
   return (
@@ -421,11 +454,14 @@ const Main = () => {
                       topPosition={reRender}
                       titleOpacity={true}
                       setTopPosition={setReRender}
-                      submitHandler={submitHandler}
+                      submitHandler={index.isSubmit}
                       titleSection={true}
                       setToolTipContent={setToolTipContent}
                       setToolTipOpacity={setToolTipOpacity}
                       toolTipOpacity={toolTipOpacity}
+                      // entryLenght={entryInputs.length}
+                      resultsContPad={resultsContPad}
+                      resultsContWidth={primaryResultsContWidth}
                     />
                   </Content>
                 );
@@ -457,6 +493,7 @@ const Main = () => {
                       position: "relative",
                       display: "flex",
                       alignItems: "flex-end",
+                      // justifyContent: "center",
                       opacity: 0,
                       // padding: "48px 0",
                       height: "0%",
@@ -472,6 +509,7 @@ const Main = () => {
                       // scaleY: index.isVisible ? 1 : 0,
                       // padding: index.isVisible ? "48px 0" : "0px",
                       opacity: index.isVisible ? 1 : 0,
+                      // maxWidth: index.isSubmit ? "" : "562px",
                     }}
                     transition={{
                       duration: 1,
@@ -482,11 +520,14 @@ const Main = () => {
                       topPosition={reRender}
                       setTopPosition={setReRender}
                       titleOpacity={false}
-                      submitHandler={submitHandler}
+                      submitHandler={index.isSubmit}
                       titleSection={false}
                       setToolTipContent={setToolTipContent}
                       setToolTipOpacity={setToolTipOpacity}
                       toolTipOpacity={toolTipOpacity}
+                      // entryLenght={entryInputs.length}
+                      resultsMaxWidth={"562px"}
+                      resultsContWidth={resultsContWidth}
                     />
                     <DeleteButton onClick={() => removeContent(index.id)}>
                       <svg
@@ -560,7 +601,7 @@ const Main = () => {
           <LargeButton
             className="addButton"
             onClick={handleEntry}
-            disabled={submitHandler}
+            // disabled={submitHandler}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

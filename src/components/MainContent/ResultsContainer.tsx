@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Column } from "../Containers/Column";
 import { Row } from "../Containers/Row";
 import { Input, LargeInput } from "../Inputs/inputs";
 import { motion } from "framer-motion";
+import { useWindowSize } from "../../custom_hooks/useWindowSize";
 
 interface InputItems {
   id: number;
@@ -15,8 +16,8 @@ interface Props {
   inputFields: InputItems[];
   clicked: boolean;
   inputHeight: number;
-  inputWidth: string;
-  inputWidthReverse: string;
+  // inputWidth: string;
+  // inputWidthReverse: string;
 }
 
 const ReloadTask = styled(motion.div)`
@@ -62,8 +63,10 @@ const InputContaner = styled(motion.div)`
 
 const TopSection = styled(motion.div)`
   display: flex;
+  // flex-wrap: none;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 `;
 
 const ReloadButton = styled(motion.div)`
@@ -80,7 +83,6 @@ const ReloadButton = styled(motion.div)`
   border-radius: 24px;
   height: 34px;
   width: 48px;
-  transition: box-shadow ease-in 0.3s;
   &:hover {
     transition: border ease-in 0.3s;
     border: 2px solid #6d7378;
@@ -93,16 +95,26 @@ const ReloadButton = styled(motion.div)`
   }
 `;
 
-const MainContainer = ({
-  inputFields,
-  clicked,
-  inputHeight,
-  inputWidth,
-  inputWidthReverse,
-}: Props) => {
+const MainContainer = ({ inputFields, clicked, inputHeight }: Props) => {
+  const [screenWidth] = useWindowSize();
+  const dateFileds = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (screenWidth > 464) {
+      if (dateFileds.current) {
+        dateFileds.current.style.flexWrap = "none";
+      }
+    }
+    if (screenWidth < 464 && screenWidth != 0) {
+      if (dateFileds.current) {
+        dateFileds.current.style.flexWrap = "wrap";
+      }
+    }
+  }, [screenWidth]);
+
   return (
-    <TopSection animate={{ gap: clicked ? "24px" : "8px" }}>
-      <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
+    <TopSection>
+      <Row ref={dateFileds} gap="sm" justify="fe" align="fe">
         <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
           <Input placeholder="Your job title..." />
           <ReloadButton>
@@ -160,9 +172,11 @@ const MainContainer = ({
                 flexDirection: "column",
                 gap: "8px",
               }}
-              animate={{
-                width: clicked ? inputWidth : inputWidthReverse,
-              }}
+              animate={
+                {
+                  // width: clicked ? inputWidth : inputWidthReverse,
+                }
+              }
             >
               {inputFields.map((index, i) => {
                 if (index.id === 1) {
@@ -205,7 +219,10 @@ const MainContainer = ({
                       placeholder={"Tasks..."}
                     />
 
-                    <ReloadButton>
+                    <ReloadButton
+                      style={{ opacity: 0 }}
+                      animate={{ opacity: index.isVisible ? 1 : 0 }}
+                    >
                       <svg
                         id="Component_12_1"
                         data-name="Component 12 – 1"
