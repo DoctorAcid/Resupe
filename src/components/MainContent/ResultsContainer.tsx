@@ -105,7 +105,7 @@ const MainContainer = ({ inputFields, clicked, inputHeight }: Props) => {
         dateFileds.current.style.flexWrap = "none";
       }
     }
-    if (screenWidth < 464 && screenWidth != 0) {
+    if (screenWidth < 464 && screenWidth !== 0) {
       if (dateFileds.current) {
         dateFileds.current.style.flexWrap = "wrap";
       }
