@@ -279,7 +279,7 @@ const Main = () => {
         } else setTopPosition(false);
       }
     }
-  }, [clicked, reRender]);
+  }, [clicked, reRender, height]);
 
   useEffect(() => {
     if (entryInputs.length > 1) {
