@@ -6,7 +6,6 @@ import MainContainer from "../components/MainContent/MainContainer";
 import NavBar from "../components/NavBar/NavBar";
 import "./style.css";
 import { motion } from "framer-motion";
-// import ScrollToBottom from "react-scroll-to-bottom";
 import ToolTip from "../components/ToolTip";
 import { useWindowSize } from "../custom_hooks/useWindowSize";
 
@@ -240,18 +239,16 @@ const Main = () => {
   const [popUpOpacity, setPopUpOpacity] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(false);
-  // const [submitHandler, setSubmitHandler] = useState(false);
-  // const [contentHeight, setContentHeight] = useState("337px");
   const [resultsContPad, setResultsContPad] = useState("");
   const [toolTipContent, setToolTipContent] = useState("");
   const [toolTipOpacity, setToolTipOpacity] = useState(false);
   const [primaryResultsContWidth, setPrimaryResultsContWidth] =
     useState("512px");
   const [resultsContWidth, setResultsContWidth] = useState("512px");
-  const [width] = useWindowSize();
+  const [width, height] = useWindowSize();
 
   useEffect(() => {
-    if (width < 1414) {
+    if (width <= 1418) {
       setResultsContWidth("565px");
       setPrimaryResultsContWidth("");
       setResultsContPad("174px");
@@ -259,48 +256,30 @@ const Main = () => {
     if (width < 742) {
       setResultsContPad("0px");
     }
-    if (width > 1413) {
+    if (width > 1418) {
       setResultsContWidth("512px");
       setPrimaryResultsContWidth("512px");
       setResultsContPad("0px");
     }
   }, [width]);
 
-  // useEffect(() => {
-  //   if (mainContent.current) {
-  //     const contHeight = String(mainContent.current.offsetHeight) + "px";
-  //     setContentHeight(contHeight);
-  //   }
-  //   setTimeout(() => {
-  //     setContentHeight("max-content");
-  //   }, 1000);
-  // }, [clicked, reRender]);
-
-  // useEffect(() => {
-  //   setContentHeight("max-content");
-  // }, [reRender]);
-
   useEffect(() => {
     if (mainWrap.current) {
       const top = mainWrap.current.offsetHeight;
-      if (top > 1080) {
-        setTopPosition(true);
-      }
-      if (top < 1080) {
-        setTopPosition(false);
+      if (height > 940) {
+        if (top > 960) {
+          setTopPosition(true);
+        }
+        if (top < 960) {
+          setTopPosition(false);
+        }
+      } else {
+        if (top > 600) {
+          setTopPosition(true);
+        } else setTopPosition(false);
       }
     }
   }, [clicked, reRender]);
-
-  if (topPosition) {
-    if (newEntry.current) {
-      newEntry.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    }
-  }
 
   useEffect(() => {
     if (entryInputs.length > 1) {
@@ -315,40 +294,25 @@ const Main = () => {
     }
   }, [entryInputs.length]);
 
-  // function contentHeightSetting(index: number) {
-  //   if (clicked || reRender) {
-  //     setEntryInputs(
-  //       entryInputs.map((input) => {
-  //         if (input.id === index) {
-  //           return { ...input, height: contentHeight };
-  //         }
-  //         return input;
-  //       })
-  //     );
-  //   }
-  // }
+  /*---  Styling functions ---*/
 
-  // function ContainerHeight() {
-  //   if (clicked) {
-  //     if (mainContent.current) {
-  //       const contHeight = "337px";
-  //       setContentHeight(contHeight);
-  //     }
-  //   }
+  const buttonHint = () => {
+    if (addingText.current && submitingText.current) {
+      const opacity1: string = window.getComputedStyle(
+        addingText.current
+      ).opacity;
+      const opacity2: string = window.getComputedStyle(
+        submitingText.current
+      ).opacity;
 
-  //   if (!clicked) {
-  //     if (mainContent.current) {
-  //       const contHeight = String(mainContent.current.offsetHeight) + "px";
-  //       setContentHeight(contHeight);
-  //     }
-  //   }
+      if (opacity1 !== "0" || opacity2 !== "0") {
+        addingText.current.style.opacity = "0";
+        submitingText.current.style.opacity = "0";
+      }
+    }
+  };
 
-  //   // setTimeout(() => {
-  //   //   setContentHeight("max-content");
-  //   // }, 1000);
-  // }
-
-  function popUp(text: string) {
+  const popUp = (text: string) => {
     setPopUpOpacity(true);
 
     setPopupText(text);
@@ -356,9 +320,9 @@ const Main = () => {
     setTimeout(() => {
       setPopUpOpacity(false);
     }, 1200);
-  }
+  };
 
-  function removeContainerVisibility(index: number) {
+  const removeContainerVisibility = (index: number) => {
     setEntryInputs(
       entryInputs.map((input) => {
         if (input.id === index) {
@@ -367,10 +331,23 @@ const Main = () => {
         return input;
       })
     );
-  }
+  };
 
-  const handleEntry = () => {
-    // ContainerHeight();
+  const scrollToView = () => {
+    if (topPosition) {
+      setTimeout(() => {
+        newEntry.current?.lastElementChild?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
+        });
+      }, 600);
+    }
+  };
+
+  /*---  Entry I/O functions ---*/
+
+  const addEntry = () => {
     setEntryInputs([
       ...entryInputs,
       {
@@ -380,31 +357,6 @@ const Main = () => {
         isSubmit: false,
       },
     ]);
-
-    popUp("Added");
-
-    setClicked(!clicked);
-  };
-
-  const handleSubmit = () => {
-    setClicked(!clicked);
-    // setSubmitHandler(true);
-
-    setEntryInputs(
-      entryInputs.map((input) => {
-        return { ...input, isSubmit: true };
-      })
-    );
-
-    popUp("Submited");
-
-    if (addingText.current) {
-      addingText.current.style.opacity = "0";
-    }
-
-    if (submitingText.current) {
-      submitingText.current.style.opacity = "0";
-    }
   };
 
   const removeEntry = (index: number) => {
@@ -413,31 +365,53 @@ const Main = () => {
     }, 300);
   };
 
-  const removeContent = (index: number, callback: (index: number) => void) => {
-    // ContainerHeight();
-    setClicked(!clicked);
-    popUp("Removed");
+  const submitEntry = () => {
+    setEntryInputs(
+      entryInputs.map((input) => {
+        return { ...input, isSubmit: true };
+      })
+    );
+  };
+
+  const clickStateHandler = () => {
+    setTimeout(() => {
+      setClicked(!clicked);
+    }, 300);
+  };
+
+  /*---  Entry handling functions ---*/
+
+  const handleEntry = (entryCallback: () => void) => {
+    entryCallback();
+    popUp("Added");
+    scrollToView();
+    clickStateHandler();
+  };
+
+  const handleSubmit = (submitCallback: () => void) => {
+    submitCallback();
+    popUp("Submited");
+    buttonHint();
+    clickStateHandler();
+  };
+
+  const handleRemove = (index: number, callback: (index: number) => void) => {
     removeContainerVisibility(index);
     callback(index);
+    popUp("Removed");
+    clickStateHandler();
   };
 
   return (
-    // <ScrollToBottom className="ROOT_CSS" mode="bottom">
     <Wrap
       style={{
-        // border: "2px solid red",
-        // position: "absolute",
         overflowX: "hidden",
         justifyContent: topPosition ? "flex-start" : "center",
       }}
     >
       <NavBar />
 
-      <Wrapper
-        // style={{ position: "absolute", top: 0 }}
-        // animate={{ width: submitHandler ? "1600px" : "800px", opacity: "1" }}
-        ref={mainWrap}
-      >
+      <Wrapper ref={mainWrap}>
         <ContentWrap>
           {entryInputs.map((index, i) => {
             if (index.id === 1) {
@@ -459,7 +433,6 @@ const Main = () => {
                     setToolTipContent={setToolTipContent}
                     setToolTipOpacity={setToolTipOpacity}
                     toolTipOpacity={toolTipOpacity}
-                    // entryLenght={entryInputs.length}
                     resultsContPad={resultsContPad}
                     resultsContWidth={primaryResultsContWidth}
                   />
@@ -469,13 +442,13 @@ const Main = () => {
             return (
               <Content
                 className="content mainContent"
+                id="newEntry"
                 ref={newEntry}
                 style={{
                   height: "max-content",
                   opacity: 0,
                   paddingTop: "0px",
                   paddingBottom: "0px",
-                  // border: "2px solid red",
                 }}
                 animate={{
                   paddingTop: index.isVisible ? "48px" : "0px",
@@ -483,7 +456,7 @@ const Main = () => {
                   opacity: index.isVisible ? 1 : 0,
                 }}
                 transition={{
-                  duration: index.isVisible ? 1 : 0.3,
+                  duration: index.isVisible ? 0.8 : 0.3,
                 }}
                 key={index.id}
               >
@@ -493,27 +466,17 @@ const Main = () => {
                     position: "relative",
                     display: "flex",
                     alignItems: "flex-end",
-                    // justifyContent: "center",
                     opacity: 0,
-                    // padding: "48px 0",
                     height: "0%",
                     width: "100%",
-                    // marginTop: "-112px",
-                    // scaleY: 0,
                     top: 0,
                   }}
                   animate={{
                     height: index.isVisible ? "max-content" : "0%",
-                    // padding: index.isVisible ? "4em 0em" : "0em",
-                    // marginTop: index.isVisible ? "0px" : "-112px",
-                    // scaleY: index.isVisible ? 1 : 0,
-                    // padding: index.isVisible ? "48px 0" : "0px",
                     opacity: index.isVisible ? 1 : 0,
-                    // maxWidth: index.isSubmit ? "" : "562px",
                   }}
                   transition={{
-                    duration: index.isVisible ? 1 : 0.3,
-                    // delay: index.isVisible ? 0 : 0.3,
+                    duration: index.isVisible ? 0.8 : 0.3,
                   }}
                 >
                   <MainContainer
@@ -525,12 +488,11 @@ const Main = () => {
                     setToolTipContent={setToolTipContent}
                     setToolTipOpacity={setToolTipOpacity}
                     toolTipOpacity={toolTipOpacity}
-                    // entryLenght={entryInputs.length}
                     resultsMaxWidth={"562px"}
                     resultsContWidth={resultsContWidth}
                   />
                   <DeleteButton
-                    onClick={() => removeContent(index.id, removeEntry)}
+                    onClick={() => handleRemove(index.id, removeEntry)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -602,8 +564,7 @@ const Main = () => {
 
         <LargeButton
           className="addButton"
-          onClick={() => handleEntry()}
-          // disabled={submitHandler}
+          onClick={() => handleEntry(addEntry)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -666,7 +627,10 @@ const Main = () => {
           </Row>
         </SubmitTaskText>
 
-        <LargeButton onClick={handleSubmit} className="submitButton">
+        <LargeButton
+          onClick={() => handleSubmit(submitEntry)}
+          className="submitButton"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -702,7 +666,6 @@ const Main = () => {
       </Popup>
       <ToolTip text={toolTipContent} active={toolTipOpacity} />
     </Wrap>
-    // </ScrollToBottom>
   );
 };
 

@@ -115,7 +115,7 @@ const FlexWrap = styled(motion.div)`
   width: 100%;
   align-items: flex-end;
   justify-content: center;
-  @media (max-width: 1413px) {
+  @media (max-width: 1418px) {
     flex-direction: column;
   }
 `;
@@ -148,32 +148,7 @@ const MainContainer = ({
   const [inputHeight, setInputHeight] = useState(88);
   const [inputWidth, setInputWidth] = useState("");
   const [inputWidthReverse, setInputWidthReverse] = useState("100%");
-  // const [resultsContWidth, setResultsContWidth] = useState("512px");
-  // const [resultsContHeight, setResultsContHeight] = useState("220px");
-  // const [resultsContPadding, setResultsContPadding] = useState("");
-  // const [entryFlag, setEntryFlag] = useState(false);
-  // const [resultsColumnDiv, setresultsColumnDiv] = useState(false);
-  // const [maxWidth, setMaxWidth] = useState("800px");
   const [toolTip, setToolTip] = useState("");
-
-  // const [width] = useWindowSize();
-
-  // useEffect(() => {
-  //   if (entryLenght > 1) {
-  //     setEntryFlag(true);
-  //   }
-  //   if (entryLenght < 1) {
-  //     setEntryFlag(false);
-  //   }
-  // }, [clicked]);
-
-  // useEffect(() => {
-  //   if (!submitHandler) {
-  //     if (entryLenght > 1) {
-  //       setMaxWidth("562px");
-  //     }
-  //   }
-  // }, [clicked]);
 
   useEffect(() => {
     if (toolTip) {
@@ -181,52 +156,22 @@ const MainContainer = ({
     }
   });
 
-  // useEffect(() => {
-  //   if (width < 1346) {
-  //     setResultsContWidth("100%");
-  //     setResultsContHeight("max-content");
-  //     setResultsContPadding("174px");
-  //     setresultsColumnDiv(true);
-  //   }
-  //   if (width < 742) {
-  //     setResultsContPadding("0px");
-  //   }
-  //   if (width > 1346) {
-  //     setResultsContWidth("512px");
-  //     setResultsContHeight("220px");
-  //     setResultsContPadding("0px");
-  //     setresultsColumnDiv(false);
-  //   }
-  // }, [width]);
-
-  // useEffect(() => {
-  //   if (width < 1414) {
-  //     setResultsContWidth("565px");
-  //   }
-  //   if (width > 1414) {
-  //     setResultsContWidth("512px");
-  //   }
-  // }, [width]);
-
-  function addButtonHeight() {
+  const addButtonHeight = () => {
     if (inputFields.length === 1) {
       return 104;
     }
     return inputHeight + 56;
-  }
+  };
 
-  function reduseButtonHeight() {
+  const reduseButtonHeight = () => {
     if (inputFields.length === 2) {
       setInputHeight(88);
       return inputHeight;
     }
     return inputHeight - 56;
-  }
+  };
 
-  const handleClick = () => {
-    setClicked(true);
-    setTopPosition(!topPosition);
-    setInputHeight(addButtonHeight);
+  const addEntryField = () => {
     setInputFields([
       ...inputFields,
       {
@@ -235,9 +180,9 @@ const MainContainer = ({
         isVisible: true,
       },
     ]);
+  };
 
-    // setResultsContHeight("max-content");
-
+  const inputWidthOrganize = () => {
     if (inputFields.length === 1) {
       if (textArea.current) {
         const inputWidth = textArea.current.offsetWidth;
@@ -249,18 +194,17 @@ const MainContainer = ({
         }, 800);
       }
     }
-
-    if (largeInput.current) {
-      largeInput.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "center",
-      });
-    }
   };
 
-  const removeInput = (index: number) => {
-    setTopPosition(!topPosition);
+  const scrollToNewEntry = () => {
+    largeInput.current?.lastElementChild?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center",
+    });
+  };
+
+  const removeEntryFiledVisibility = (index: number) => {
     setInputFields(
       inputFields.map((input) => {
         if (input.id === index) {
@@ -269,11 +213,15 @@ const MainContainer = ({
         return input;
       })
     );
+  };
 
+  const removeEntryFiled = (index: number) => {
     setTimeout(() => {
       setInputFields(inputFields.filter((i) => i.id !== index));
     }, 300);
+  };
 
+  const inputWidthWhileRomove = () => {
     if (inputFields.length === 2) {
       setInputHeight(88);
     }
@@ -292,6 +240,25 @@ const MainContainer = ({
       const width = String(inputWidth + 52) + "px";
       setInputWidthReverse(width);
     }
+  };
+
+  const handleClick = (entryFieldCallback: () => void) => {
+    entryFieldCallback();
+    setClicked(true);
+    setTopPosition(!topPosition);
+    setInputHeight(addButtonHeight);
+    inputWidthOrganize();
+    scrollToNewEntry();
+  };
+
+  const removeInput = (
+    index: number,
+    removeCallback: (index: number) => void
+  ) => {
+    removeCallback(index);
+    removeEntryFiledVisibility(index);
+    setTopPosition(!topPosition);
+    inputWidthWhileRomove();
   };
 
   return (
@@ -445,7 +412,7 @@ const MainContainer = ({
                             ? "all ease-in 1.4s"
                             : "all ease-in 0.1s",
                         }}
-                        onClick={() => removeInput(index.id)}
+                        onClick={() => removeInput(index.id, removeEntryFiled)}
                         // disabled={submitHandler}
                       >
                         <svg
@@ -481,7 +448,7 @@ const MainContainer = ({
               transition={{ delay: clicked ? 0.2 : 0 }}
             >
               <AddTasks
-                onClick={handleClick}
+                onClick={() => handleClick(addEntryField)}
                 animate={{
                   height: inputHeight,
                 }}
