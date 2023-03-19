@@ -3,9 +3,16 @@ import styled from "styled-components";
 import { Column } from "../Containers/Column";
 import { Row } from "../Containers/Row";
 import { Input, LargeInput } from "../Inputs/inputs";
+import SortableInputs from "../Inputs/SortableInputs";
 import TitleTag from "../TitleTag/TitleTag";
 import { motion } from "framer-motion";
 import ResultsContainer from "./ResultsContainer";
+import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 // import { useWindowSize } from "../../custom_hooks/useWindowSize";
 
 interface InputItems {
@@ -141,7 +148,7 @@ const MainContainer = ({
   const largeInput = useRef<HTMLDivElement>(null);
   const topSection = useRef<HTMLDivElement>(null);
   const [inputFields, setInputFields] = useState<InputItems[]>([
-    { id: 1, name: "input1", isVisible: false },
+    { id: 1, name: "input1", isVisible: true },
   ]);
 
   const [clicked, setClicked] = useState(false);
@@ -215,11 +222,43 @@ const MainContainer = ({
     );
   };
 
-  const removeEntryFiled = (index: number) => {
-    setTimeout(() => {
-      setInputFields(inputFields.filter((i) => i.id !== index));
-    }, 300);
-  };
+  useEffect(() => {
+    inputFields.map((index) => {
+      if (index.isVisible === false) {
+        setTimeout(() => {
+          setInputFields(inputFields.filter((i) => i !== index));
+        }, 300);
+      }
+    });
+  }, [inputFields]);
+
+  // const removeEntryFiled = (index: number) => {
+  //   setTimeout(() => {
+  //     setInputFields(inputFields.filter((i) => i.id !== index));
+  //   }, 300);
+  // };
+
+  useEffect(() => {
+    setTopPosition(!topPosition);
+    inputFields.map((index) => {
+      if (index.isVisible === false) {
+        if (inputFields.length === 2) {
+          setInputHeight(88);
+          setClicked(false);
+          setTimeout(() => {
+            setInputWidthReverse("100%");
+          }, 800);
+
+          if (textArea.current) {
+            const inputWidth = textArea.current.offsetWidth;
+            const width = String(inputWidth + 52) + "px";
+            setInputWidthReverse(width);
+          }
+        }
+        setInputHeight(reduseButtonHeight);
+      }
+    });
+  }, [inputFields]);
 
   const inputWidthWhileRomove = () => {
     if (inputFields.length === 2) {
@@ -251,6 +290,17 @@ const MainContainer = ({
     scrollToNewEntry();
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (active.id !== over?.id) {
+      setInputFields((items) => {
+        const oldIndex = items.findIndex((items) => items.id === active.id);
+        const newIndex = items.findIndex((items) => items.id === over?.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
   const removeInput = (
     index: number,
     removeCallback: (index: number) => void
@@ -258,7 +308,7 @@ const MainContainer = ({
     removeCallback(index);
     removeEntryFiledVisibility(index);
     setTopPosition(!topPosition);
-    inputWidthWhileRomove();
+    // inputWidthWhileRomove();
   };
 
   return (
@@ -343,97 +393,122 @@ const MainContainer = ({
               justifyContent: clicked ? "flex-start" : "center",
             }}
           >
-            <MultiInputs
-              animate={{
-                flexDirection: clicked ? "column" : "row",
-              }}
-              transition={{ delay: clicked ? 0 : 0.6 }}
-              ref={textArea}
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
             >
-              <motion.div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                }}
+              <MultiInputs
                 animate={{
-                  width: clicked ? inputWidth : inputWidthReverse,
+                  flexDirection: clicked ? "column" : "row",
                 }}
+                transition={{ delay: clicked ? 0 : 0.6 }}
+                ref={textArea}
               >
-                {inputFields.map((index, i) => {
-                  if (index.id === 1) {
-                    return (
-                      <InputContaner
-                        ref={largeInput}
-                        key={index.id}
-                        animate={{
-                          height: clicked ? "48px" : "104px",
-                        }}
-                        style={{
-                          height: "104px",
-                          width: "100%",
-                        }}
-                      >
-                        <LargeInput
-                          style={{
-                            padding: "12px 16px",
-                          }}
-                          placeholder={
-                            "Tasks, responsibilities and achievements..."
-                          }
+                <SortableContext
+                  items={inputFields}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <motion.div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                    }}
+                    animate={{
+                      width: clicked ? inputWidth : inputWidthReverse,
+                    }}
+                  >
+                    {inputFields.map((index) => {
+                      if (index.id === 1) {
+                        return (
+                          <React.Fragment key={index.id}>
+                            <InputContaner
+                              ref={largeInput}
+                              animate={{
+                                height: clicked ? "48px" : "104px",
+                              }}
+                              style={{
+                                height: "104px",
+                                width: "100%",
+                              }}
+                            >
+                              <LargeInput
+                                style={{
+                                  padding: "12px 16px",
+                                }}
+                                placeholder={
+                                  "Tasks, responsibilities and achievements..."
+                                }
+                              />
+                            </InputContaner>
+                          </React.Fragment>
+                        );
+                      }
+                      return (
+                        <SortableInputs
+                          id={index.id}
+                          isVisible={index.isVisible}
+                          inputFields={inputFields}
+                          setInputFields={setInputFields}
+                          key={index.id}
+                          // child={
+                          //   <React.Fragment>
+                          //     <InputContaner
+                          //       ref={largeInput}
+                          //       className="input"
+                          //       animate={{
+                          //         width: index.isVisible ? "100%" : "0%",
+                          //         height: index.isVisible ? "48px" : "0px",
+                          //       }}
+                          //       transition={{ type: "tween" }}
+                          //     >
+                          //       <LargeInput
+                          //         animate={{
+                          //           padding: index.isVisible
+                          //             ? "12px 16px"
+                          //             : "0px",
+                          //         }}
+                          //         placeholder={"Tasks..."}
+                          //       />
+                          //       <DeleteButton
+                          //         animate={{
+                          //           opacity: index.isVisible ? "1" : "0",
+                          //         }}
+                          //         style={{
+                          //           transition: index.isVisible
+                          //             ? "all ease-in 1.4s"
+                          //             : "all ease-in 0.1s",
+                          //         }}
+                          //         onClick={() =>
+                          //           removeInput(index.id, removeEntryFiled)
+                          //         }
+                          //         // disabled={submitHandler}
+                          //       >
+                          //         <svg
+                          //           xmlns="http://www.w3.org/2000/svg"
+                          //           width="14"
+                          //           height="15.999"
+                          //           viewBox="0 0 14 15.999"
+                          //         >
+                          //           <path
+                          //             id="Union_11"
+                          //             data-name="Union 11"
+                          //             d="M3,16a2,2,0,0,1-2-2V4H13V14a2,2,0,0,1-2,2ZM9.5,6.5v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0ZM0,3A2,2,0,0,1,2,1H5A1,1,0,0,1,6,0H8A1,1,0,0,1,9,1h3a2,2,0,0,1,2,2Z"
+                          //             fill="#d9dee2"
+                          //           />
+                          //         </svg>
+                          //       </DeleteButton>
+                          //     </InputContaner>
+                          //   </React.Fragment>
+                          // }
                         />
-                      </InputContaner>
-                    );
-                  }
-                  return (
-                    <InputContaner
-                      ref={largeInput}
-                      className="input"
-                      animate={{
-                        width: index.isVisible ? "100%" : "0%",
-                        height: index.isVisible ? "48px" : "0px",
-                      }}
-                      transition={{ type: "tween" }}
-                      key={index.id}
-                    >
-                      <LargeInput
-                        animate={{
-                          padding: index.isVisible ? "12px 16px" : "0px",
-                        }}
-                        placeholder={"Tasks..."}
-                      />
-                      <DeleteButton
-                        animate={{
-                          opacity: index.isVisible ? "1" : "0",
-                        }}
-                        style={{
-                          transition: index.isVisible
-                            ? "all ease-in 1.4s"
-                            : "all ease-in 0.1s",
-                        }}
-                        onClick={() => removeInput(index.id, removeEntryFiled)}
-                        // disabled={submitHandler}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="15.999"
-                          viewBox="0 0 14 15.999"
-                        >
-                          <path
-                            id="Union_11"
-                            data-name="Union 11"
-                            d="M3,16a2,2,0,0,1-2-2V4H13V14a2,2,0,0,1-2,2ZM9.5,6.5v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0ZM0,3A2,2,0,0,1,2,1H5A1,1,0,0,1,6,0H8A1,1,0,0,1,9,1h3a2,2,0,0,1,2,2Z"
-                            fill="#d9dee2"
-                          />
-                        </svg>
-                      </DeleteButton>
-                    </InputContaner>
-                  );
-                })}
-              </motion.div>
-            </MultiInputs>
+                      );
+                    })}
+                  </motion.div>
+                </SortableContext>
+              </MultiInputs>
+            </DndContext>
             <Column
               style={{
                 position: "absolute",

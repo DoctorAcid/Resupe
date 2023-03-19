@@ -248,7 +248,7 @@ const Main = () => {
   const [width, height] = useWindowSize();
 
   useEffect(() => {
-    if (width <= 1418) {
+    if (width < 1419) {
       setResultsContWidth("565px");
       setPrimaryResultsContWidth("");
       setResultsContPad("174px");
