@@ -131,14 +131,6 @@ const ResultsContWrap = styled(motion.div)``;
 
 const ResultsWrap = styled(motion.div)``;
 
-const getNextId = (inputFields: InputItems[]): number => {
-  let nextId: number = inputFields.length + 1;
-  while (inputFields.some((inputFields) => inputFields.id === nextId)) {
-    nextId++;
-  }
-  return nextId;
-};
-
 const MainContainer = ({
   topPosition,
   setTopPosition,
@@ -186,8 +178,22 @@ const MainContainer = ({
   //   return inputHeight - 56;
   // };
 
+  const getNextId = () => {
+    let nextId: number = inputFields.length + 1;
+    for (let i = 0; i < inputFields.length; i++) {
+      if (inputFields[i].id === nextId) {
+        nextId++;
+        i = -1;
+      }
+    }
+    // while (inputFields.some((inputFields) => inputFields.id === nextId)) {
+    //   nextId++;
+    // }
+    return nextId;
+  };
+
   const addEntryField = () => {
-    let newID = getNextId(inputFields);
+    let newID = getNextId();
     setInputFields([
       ...inputFields,
       {
