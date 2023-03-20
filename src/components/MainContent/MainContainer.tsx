@@ -178,12 +178,21 @@ const MainContainer = ({
   //   return inputHeight - 56;
   // };
 
+  const getNextId = (): number => {
+    let nextId = inputFields.length + 1;
+    while (inputFields.some((inputFields) => inputFields.id === nextId)) {
+      nextId++;
+    }
+    return nextId;
+  };
+
   const addEntryField = () => {
+    const id = getNextId();
     setInputFields([
       ...inputFields,
       {
-        id: inputFields.length + 1,
-        name: "input" + (inputFields.length + 1),
+        id: id,
+        name: "input" + id,
         isVisible: true,
       },
     ]);
@@ -203,13 +212,13 @@ const MainContainer = ({
     }
   };
 
-  const scrollToNewEntry = () => {
-    largeInput.current?.lastElementChild?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-      inline: "center",
-    });
-  };
+  // const scrollToNewEntry = () => {
+  //   largeInput.current?.lastElementChild?.scrollIntoView({
+  //     behavior: "smooth",
+  //     block: "center",
+  //     inline: "center",
+  //   });
+  // };
 
   // const removeEntryFiledVisibility = (index: number) => {
   //   setInputFields(
@@ -288,7 +297,7 @@ const MainContainer = ({
     setTopPosition(!topPosition);
     setInputHeight(addButtonHeight);
     inputWidthOrganize();
-    scrollToNewEntry();
+    // scrollToNewEntry();
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -423,27 +432,26 @@ const MainContainer = ({
                     {inputFields.map((index) => {
                       if (index.id === 1) {
                         return (
-                          <React.Fragment key={index.id}>
-                            <InputContaner
-                              ref={largeInput}
-                              animate={{
-                                height: clicked ? "48px" : "104px",
-                              }}
+                          <InputContaner
+                            ref={largeInput}
+                            key={index.id}
+                            animate={{
+                              height: clicked ? "48px" : "104px",
+                            }}
+                            style={{
+                              height: "104px",
+                              width: "100%",
+                            }}
+                          >
+                            <LargeInput
                               style={{
-                                height: "104px",
-                                width: "100%",
+                                padding: "12px 16px",
                               }}
-                            >
-                              <LargeInput
-                                style={{
-                                  padding: "12px 16px",
-                                }}
-                                placeholder={
-                                  "Tasks, responsibilities and achievements..."
-                                }
-                              />
-                            </InputContaner>
-                          </React.Fragment>
+                              placeholder={
+                                "Tasks, responsibilities and achievements..."
+                              }
+                            />
+                          </InputContaner>
                         );
                       }
                       return (
@@ -457,56 +465,8 @@ const MainContainer = ({
                           setTopPosition={setTopPosition}
                           inputHeight={inputHeight}
                           setInputHeight={setInputHeight}
-                          // child={
-                          //   <React.Fragment>
-                          //     <InputContaner
-                          //       ref={largeInput}
-                          //       className="input"
-                          //       animate={{
-                          //         width: index.isVisible ? "100%" : "0%",
-                          //         height: index.isVisible ? "48px" : "0px",
-                          //       }}
-                          //       transition={{ type: "tween" }}
-                          //     >
-                          //       <LargeInput
-                          //         animate={{
-                          //           padding: index.isVisible
-                          //             ? "12px 16px"
-                          //             : "0px",
-                          //         }}
-                          //         placeholder={"Tasks..."}
-                          //       />
-                          //       <DeleteButton
-                          //         animate={{
-                          //           opacity: index.isVisible ? "1" : "0",
-                          //         }}
-                          //         style={{
-                          //           transition: index.isVisible
-                          //             ? "all ease-in 1.4s"
-                          //             : "all ease-in 0.1s",
-                          //         }}
-                          //         onClick={() =>
-                          //           removeInput(index.id, removeEntryFiled)
-                          //         }
-                          //         // disabled={submitHandler}
-                          //       >
-                          //         <svg
-                          //           xmlns="http://www.w3.org/2000/svg"
-                          //           width="14"
-                          //           height="15.999"
-                          //           viewBox="0 0 14 15.999"
-                          //         >
-                          //           <path
-                          //             id="Union_11"
-                          //             data-name="Union 11"
-                          //             d="M3,16a2,2,0,0,1-2-2V4H13V14a2,2,0,0,1-2,2ZM9.5,6.5v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0ZM0,3A2,2,0,0,1,2,1H5A1,1,0,0,1,6,0H8A1,1,0,0,1,9,1h3a2,2,0,0,1,2,2Z"
-                          //             fill="#d9dee2"
-                          //           />
-                          //         </svg>
-                          //       </DeleteButton>
-                          //     </InputContaner>
-                          //   </React.Fragment>
-                          // }
+                          clicked={clicked}
+                          setClicked={setClicked}
                         />
                       );
                     })}

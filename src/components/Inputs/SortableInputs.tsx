@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useRef } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import styled from "styled-components";
@@ -20,6 +20,8 @@ type Props = {
   setInputHeight: React.Dispatch<React.SetStateAction<number>>;
   topPosition: boolean;
   setTopPosition: React.Dispatch<React.SetStateAction<boolean>>;
+  clicked: boolean;
+  setClicked: React.Dispatch<React.SetStateAction<boolean>>;
   // child: React.ReactElement;
 };
 
@@ -59,7 +61,11 @@ const SortableInputs: FC<Props> = ({
   setInputHeight,
   topPosition,
   setTopPosition,
+  clicked,
+  setClicked,
 }) => {
+  const largeInput = useRef<HTMLDivElement>(null);
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -69,6 +75,14 @@ const SortableInputs: FC<Props> = ({
     width: "100%",
     height: "100%",
   };
+
+  useEffect(() => {
+    largeInput.current?.lastElementChild?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center",
+    });
+  }, [clicked]);
 
   const reduseButtonHeight = () => {
     if (inputFields.length === 2) {
@@ -93,12 +107,14 @@ const SortableInputs: FC<Props> = ({
     callBack(id);
     setInputHeight(reduseButtonHeight);
     setTopPosition(!topPosition);
+    // setClicked(false);
   };
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
       <InputContaner
         className="input"
+        ref={largeInput}
         animate={{
           width: isVisible ? "100%" : "0%",
           height: isVisible ? "48px" : "0px",

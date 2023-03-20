@@ -347,12 +347,21 @@ const Main = () => {
 
   /*---  Entry I/O functions ---*/
 
+  const getNextID = () => {
+    let nextID = entryInputs.length + 1;
+    while (entryInputs.some((entryInputs) => entryInputs.id === nextID)) {
+      nextID++;
+    }
+    return nextID;
+  };
+
   const addEntry = () => {
+    let id = getNextID();
     setEntryInputs([
       ...entryInputs,
       {
-        id: entryInputs.length + 1,
-        name: "input" + String(entryInputs.length + 1),
+        id: id,
+        name: `Entry ${String(id)}`,
         isVisible: true,
         isSubmit: false,
       },
