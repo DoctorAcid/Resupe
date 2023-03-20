@@ -232,13 +232,12 @@ const MainContainer = ({
   // };
 
   useEffect(() => {
-    inputFields.map((index) => {
-      if (index.isVisible === false) {
+    inputFields.some((input) => {
+      if (!input.isVisible) {
         setTimeout(() => {
-          setInputFields(inputFields.filter((i) => i !== index));
+          setInputFields(inputFields.filter((i) => i.id !== input.id));
         }, 300);
       }
-      return null;
     });
   }, [inputFields]);
 
@@ -250,7 +249,7 @@ const MainContainer = ({
 
   useEffect(() => {
     // setTopPosition(!topPosition);
-    inputFields.map((index) => {
+    inputFields.some((index) => {
       if (index.isVisible === false) {
         if (inputFields.length === 2) {
           setInputHeight(88);
@@ -266,7 +265,6 @@ const MainContainer = ({
           }
         }
       }
-      return null;
     });
   }, [inputFields]);
 

@@ -8,6 +8,7 @@ import "./style.css";
 import { motion } from "framer-motion";
 import ToolTip from "../components/ToolTip";
 import { useWindowSize } from "../custom_hooks/useWindowSize";
+import { stringify } from "querystring";
 
 const Wrap = styled(motion.div)`
   display: flex;
@@ -231,7 +232,7 @@ const Main = () => {
   const mainContent = useRef<HTMLDivElement>(null);
 
   const [entryInputs, setEntryInputs] = useState([
-    { id: 1, name: "input1", isVisible: false, isSubmit: false },
+    { id: 1, name: "input1", isVisible: true, isSubmit: false },
   ]);
 
   const [reRender, setReRender] = useState(false);
@@ -368,11 +369,21 @@ const Main = () => {
     ]);
   };
 
-  const removeEntry = (index: number) => {
-    setTimeout(() => {
-      setEntryInputs(entryInputs.filter((i) => i.id !== index));
-    }, 300);
-  };
+  useEffect(() => {
+    entryInputs.some((entry) => {
+      if (!entry.isVisible) {
+        setTimeout(() => {
+          setEntryInputs(entryInputs.filter((i) => i.id !== entry.id));
+        }, 300);
+      }
+    });
+  }, [entryInputs]);
+
+  // const removeEntry = (index: number) => {
+  //   setTimeout(() => {
+  //     setEntryInputs(entryInputs.filter((i) => i.id !== index));
+  //   }, 300);
+  // };
 
   const submitEntry = () => {
     setEntryInputs(
@@ -404,9 +415,8 @@ const Main = () => {
     clickStateHandler();
   };
 
-  const handleRemove = (index: number, callback: (index: number) => void) => {
+  const handleRemove = (index: number) => {
     removeContainerVisibility(index);
-    callback(index);
     popUp("Removed");
     clickStateHandler();
   };
@@ -500,9 +510,7 @@ const Main = () => {
                     resultsMaxWidth={"562px"}
                     resultsContWidth={resultsContWidth}
                   />
-                  <DeleteButton
-                    onClick={() => handleRemove(index.id, removeEntry)}
-                  >
+                  <DeleteButton onClick={() => handleRemove(index.id)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
