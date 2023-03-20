@@ -180,7 +180,7 @@ const MainContainer = ({
 
   const getNextId = (): number => {
     let nextId: number = inputFields.length + 1;
-    if (inputFields.some((inputFields) => inputFields.id === nextId)) {
+    while (inputFields.some((inputFields) => inputFields.id === nextId)) {
       nextId++;
     }
     return nextId;
@@ -232,7 +232,7 @@ const MainContainer = ({
   // };
 
   useEffect(() => {
-    inputFields.some((input) => {
+    inputFields.map((input) => {
       if (!input.isVisible) {
         setTimeout(() => {
           setInputFields(inputFields.filter((i) => i.id !== input.id));
@@ -251,7 +251,7 @@ const MainContainer = ({
   useEffect(() => {
     // setTopPosition(!topPosition);
     inputFields.some((index) => {
-      if (index.isVisible === false) {
+      if (!index.isVisible) {
         if (inputFields.length === 2) {
           setInputHeight(88);
           setClicked(false);

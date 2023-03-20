@@ -349,7 +349,7 @@ const Main = () => {
 
   const getNextID = () => {
     let nextID: number = entryInputs.length + 1;
-    if (entryInputs.some((entryInputs) => entryInputs.id === nextID)) {
+    while (entryInputs.some((entryInputs) => entryInputs.id === nextID)) {
       nextID++;
     }
     return nextID;
@@ -369,7 +369,7 @@ const Main = () => {
   };
 
   useEffect(() => {
-    entryInputs.some((entry) => {
+    entryInputs.map((entry) => {
       if (!entry.isVisible) {
         setTimeout(() => {
           setEntryInputs(entryInputs.filter((i) => i.id !== entry.id));
