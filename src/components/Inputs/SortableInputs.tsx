@@ -131,7 +131,7 @@ const SortableInputs: FC<Props> = ({
             right: 0,
             padding: "0 8px",
             display: "flex",
-            gap: "8px",
+            gap: "4px",
             opacity: 0,
             transition: isVisible ? "all ease-in 1s" : "all ease-in 0.1s",
           }}

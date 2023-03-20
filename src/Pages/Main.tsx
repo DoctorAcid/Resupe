@@ -422,8 +422,12 @@ const Main = () => {
     <Wrap
       style={{
         overflowX: "hidden",
+        justifyContent: "center",
+      }}
+      animate={{
         justifyContent: topPosition ? "flex-start" : "center",
       }}
+      transition={{ duration: 2 }}
     >
       <NavBar />
 
