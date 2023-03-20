@@ -170,14 +170,6 @@ const MainContainer = ({
     return inputHeight + 56;
   };
 
-  // const reduseButtonHeight = () => {
-  //   if (inputFields.length === 2) {
-  //     setInputHeight(88);
-  //     return inputHeight;
-  //   }
-  //   return inputHeight - 56;
-  // };
-
   const getNextId = () => {
     let nextId: number = inputFields.length + 1;
     for (let i = 0; i < inputFields.length; i++) {
@@ -186,9 +178,6 @@ const MainContainer = ({
         i = -1;
       }
     }
-    // while (inputFields.some((inputFields) => inputFields.id === nextId)) {
-    //   nextId++;
-    // }
     return nextId;
   };
 
@@ -218,25 +207,6 @@ const MainContainer = ({
     }
   };
 
-  // const scrollToNewEntry = () => {
-  //   largeInput.current?.lastElementChild?.scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "center",
-  //     inline: "center",
-  //   });
-  // };
-
-  // const removeEntryFiledVisibility = (index: number) => {
-  //   setInputFields(
-  //     inputFields.map((input) => {
-  //       if (input.id === index) {
-  //         return { ...input, isVisible: false };
-  //       }
-  //       return input;
-  //     })
-  //   );
-  // };
-
   useEffect(() => {
     inputFields.map((input) => {
       if (!input.isVisible) {
@@ -248,14 +218,7 @@ const MainContainer = ({
     });
   }, [inputFields]);
 
-  // const removeEntryFiled = (index: number) => {
-  //   setTimeout(() => {
-  //     setInputFields(inputFields.filter((i) => i.id !== index));
-  //   }, 300);
-  // };
-
   useEffect(() => {
-    // setTopPosition(!topPosition);
     inputFields.some((index) => {
       if (!index.isVisible) {
         if (inputFields.length === 2) {
@@ -277,34 +240,12 @@ const MainContainer = ({
     });
   }, [inputFields]);
 
-  // const inputWidthWhileRomove = () => {
-  //   if (inputFields.length === 2) {
-  //     setInputHeight(88);
-  //   }
-
-  //   setInputHeight(reduseButtonHeight);
-
-  //   if (inputFields.length === 2) {
-  //     setClicked(false);
-  //     setTimeout(() => {
-  //       setInputWidthReverse("100%");
-  //     }, 800);
-  //   }
-
-  //   if (inputFields.length === 2 && textArea.current) {
-  //     const inputWidth = textArea.current.offsetWidth;
-  //     const width = String(inputWidth + 52) + "px";
-  //     setInputWidthReverse(width);
-  //   }
-  // };
-
   const handleClick = (entryFieldCallback: () => void) => {
     entryFieldCallback();
     setClicked(true);
     setTopPosition(!topPosition);
     setInputHeight(addButtonHeight);
     inputWidthOrganize();
-    // scrollToNewEntry();
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -317,16 +258,6 @@ const MainContainer = ({
       });
     }
   };
-
-  // const removeInput = (
-  //   index: number,
-  //   removeCallback: (index: number) => void
-  // ) => {
-  //   removeCallback(index);
-  //   removeEntryFiledVisibility(index);
-  //   setTopPosition(!topPosition);
-  //   // inputWidthWhileRomove();
-  // };
 
   return (
     <FlexWrap>

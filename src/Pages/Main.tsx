@@ -349,8 +349,11 @@ const Main = () => {
 
   const getNextID = (): number => {
     let nextID: number = entryInputs.length + 1;
-    while (entryInputs.some((entryInputs) => entryInputs.id === nextID)) {
-      nextID++;
+    for (let i = 0; i < entryInputs.length; i++) {
+      if (entryInputs[i].id === nextID) {
+        nextID++;
+        i = -1;
+      }
     }
     return nextID;
   };
@@ -378,12 +381,6 @@ const Main = () => {
       return null;
     });
   }, [entryInputs]);
-
-  // const removeEntry = (index: number) => {
-  //   setTimeout(() => {
-  //     setEntryInputs(entryInputs.filter((i) => i.id !== index));
-  //   }, 300);
-  // };
 
   const submitEntry = () => {
     setEntryInputs(
