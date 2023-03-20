@@ -16,6 +16,10 @@ type Props = {
   isVisible: boolean;
   inputFields: InputItems[];
   setInputFields: React.Dispatch<React.SetStateAction<InputItems[]>>;
+  inputHeight: number;
+  setInputHeight: React.Dispatch<React.SetStateAction<number>>;
+  topPosition: boolean;
+  setTopPosition: React.Dispatch<React.SetStateAction<boolean>>;
   // child: React.ReactElement;
 };
 
@@ -51,6 +55,10 @@ const SortableInputs: FC<Props> = ({
   isVisible,
   inputFields,
   setInputFields,
+  inputHeight,
+  setInputHeight,
+  topPosition,
+  setTopPosition,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -62,8 +70,15 @@ const SortableInputs: FC<Props> = ({
     height: "100%",
   };
 
+  const reduseButtonHeight = () => {
+    if (inputFields.length === 2) {
+      setInputHeight(88);
+      return inputHeight;
+    }
+    return inputHeight - 56;
+  };
+
   const removeVisibility = (id: number) => {
-    console.log("Remove clicked");
     setInputFields(
       inputFields.map((index) => {
         if (index.id === id) {
@@ -72,6 +87,12 @@ const SortableInputs: FC<Props> = ({
         return index;
       })
     );
+  };
+
+  const removeInput = (id: number, callBack: (id: number) => void) => {
+    callBack(id);
+    setInputHeight(reduseButtonHeight);
+    setTopPosition(!topPosition);
   };
 
   return (
@@ -168,7 +189,7 @@ const SortableInputs: FC<Props> = ({
           </svg>
         </motion.div>
         <DeleteButton
-          onClick={() => removeVisibility(id)}
+          onClick={() => removeInput(id, removeVisibility)}
           animate={{
             opacity: isVisible ? "1" : "0",
           }}

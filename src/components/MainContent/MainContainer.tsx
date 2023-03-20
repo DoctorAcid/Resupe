@@ -170,13 +170,13 @@ const MainContainer = ({
     return inputHeight + 56;
   };
 
-  const reduseButtonHeight = () => {
-    if (inputFields.length === 2) {
-      setInputHeight(88);
-      return inputHeight;
-    }
-    return inputHeight - 56;
-  };
+  // const reduseButtonHeight = () => {
+  //   if (inputFields.length === 2) {
+  //     setInputHeight(88);
+  //     return inputHeight;
+  //   }
+  //   return inputHeight - 56;
+  // };
 
   const addEntryField = () => {
     setInputFields([
@@ -229,7 +229,7 @@ const MainContainer = ({
           setInputFields(inputFields.filter((i) => i !== index));
         }, 300);
       }
-      return 0;
+      return null;
     });
   }, [inputFields]);
 
@@ -256,9 +256,8 @@ const MainContainer = ({
             setInputWidthReverse(width);
           }
         }
-        setInputHeight(reduseButtonHeight);
       }
-      return 0;
+      return null;
     });
   }, [inputFields]);
 
@@ -450,10 +449,14 @@ const MainContainer = ({
                       return (
                         <SortableInputs
                           id={index.id}
+                          key={index.id}
                           isVisible={index.isVisible}
                           inputFields={inputFields}
                           setInputFields={setInputFields}
-                          key={index.id}
+                          topPosition={topPosition}
+                          setTopPosition={setTopPosition}
+                          inputHeight={inputHeight}
+                          setInputHeight={setInputHeight}
                           // child={
                           //   <React.Fragment>
                           //     <InputContaner
