@@ -187,12 +187,12 @@ const MainContainer = ({
   };
 
   const addEntryField = () => {
-    const id: number = getNextId();
+    let newID = getNextId();
     setInputFields([
       ...inputFields,
       {
-        id: id,
-        name: "input" + id,
+        id: newID,
+        name: "input" + String(newID),
         isVisible: true,
       },
     ]);

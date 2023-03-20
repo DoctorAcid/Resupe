@@ -347,7 +347,7 @@ const Main = () => {
 
   /*---  Entry I/O functions ---*/
 
-  const getNextID = () => {
+  const getNextID = (): number => {
     let nextID: number = entryInputs.length + 1;
     while (entryInputs.some((entryInputs) => entryInputs.id === nextID)) {
       nextID++;
@@ -356,12 +356,12 @@ const Main = () => {
   };
 
   const addEntry = () => {
-    let id: number = getNextID();
+    let newId = getNextID();
     setEntryInputs([
       ...entryInputs,
       {
-        id: id,
-        name: `Entry ${String(id)}`,
+        id: newId,
+        name: `Entry ${String(newId)}`,
         isVisible: true,
         isSubmit: false,
       },
