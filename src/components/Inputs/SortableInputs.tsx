@@ -35,10 +35,12 @@ const InputContaner = styled(motion.div)`
 `;
 
 const DeleteButton = styled(motion.button)`
-  position: absolute;
-  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
   opacity: 0;
-  padding: 0 32px;
   background-color: transparent;
   border: none;
 
@@ -127,107 +129,86 @@ const SortableInputs: FC<Props> = ({
           }}
           placeholder={"Tasks..."}
         />
-        <motion.div
-          {...listeners}
+        <div
           style={{
-            width: "16px",
-            height: "24px",
             position: "absolute",
-            right: "8px",
+            right: 0,
+            padding: "0 8px",
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer",
-            zIndex: "6",
-            opacity: 1,
-          }}
-          animate={{
-            opacity: isVisible ? 1 : 0,
+            gap: "8px",
           }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="8"
-            height="15"
-            viewBox="0 0 8 15"
+          <DeleteButton
+            onClick={() => removeInput(id, removeVisibility)}
+            animate={{
+              opacity: isVisible ? "1" : "0",
+            }}
+            style={{
+              transition: isVisible ? "all ease-in 1.4s" : "all ease-in 0.1s",
+            }}
+            // disabled={submitHandler}
           >
-            <g
-              id="Group_2"
-              data-name="Group 2"
-              transform="translate(-1664 -401)"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="15.999"
+              viewBox="0 0 14 15.999"
             >
-              <circle
-                id="Ellipse_8"
-                data-name="Ellipse 8"
-                cx="1.5"
-                cy="1.5"
-                r="1.5"
-                transform="translate(1664 401)"
+              <path
+                id="Union_11"
+                data-name="Union 11"
+                d="M3,16a2,2,0,0,1-2-2V4H13V14a2,2,0,0,1-2,2ZM9.5,6.5v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0ZM0,3A2,2,0,0,1,2,1H5A1,1,0,0,1,6,0H8A1,1,0,0,1,9,1h3a2,2,0,0,1,2,2Z"
                 fill="#d9dee2"
               />
-              <circle
-                id="Ellipse_14"
-                data-name="Ellipse 14"
-                cx="1.5"
-                cy="1.5"
-                r="1.5"
-                transform="translate(1664 407)"
-                fill="#d9dee2"
-              />
-              <circle
-                id="Ellipse_17"
-                data-name="Ellipse 17"
-                cx="1.5"
-                cy="1.5"
-                r="1.5"
-                transform="translate(1669 404)"
-                fill="#d9dee2"
-              />
-              <circle
-                id="Ellipse_16"
-                data-name="Ellipse 16"
-                cx="1.5"
-                cy="1.5"
-                r="1.5"
-                transform="translate(1664 413)"
-                fill="#d9dee2"
-              />
-              <circle
-                id="Ellipse_18"
-                data-name="Ellipse 18"
-                cx="1.5"
-                cy="1.5"
-                r="1.5"
-                transform="translate(1669 410)"
-                fill="#d9dee2"
-              />
-            </g>
-          </svg>
-        </motion.div>
-        <DeleteButton
-          onClick={() => removeInput(id, removeVisibility)}
-          animate={{
-            opacity: isVisible ? "1" : "0",
-          }}
-          style={{
-            transition: isVisible ? "all ease-in 1.4s" : "all ease-in 0.1s",
-          }}
-          // disabled={submitHandler}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="15.999"
-            viewBox="0 0 14 15.999"
+            </svg>
+          </DeleteButton>
+
+          <motion.div
+            {...listeners}
+            style={{
+              width: "24px",
+              height: "24px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+              zIndex: "6",
+              opacity: 1,
+            }}
+            animate={{
+              opacity: isVisible ? 1 : 0,
+            }}
           >
-            <path
-              id="Union_11"
-              data-name="Union 11"
-              d="M3,16a2,2,0,0,1-2-2V4H13V14a2,2,0,0,1-2,2ZM9.5,6.5v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0Zm-3,0v7a.5.5,0,0,0,1,0v-7a.5.5,0,1,0-1,0ZM0,3A2,2,0,0,1,2,1H5A1,1,0,0,1,6,0H8A1,1,0,0,1,9,1h3a2,2,0,0,1,2,2Z"
-              fill="#d9dee2"
-            />
-          </svg>
-        </DeleteButton>
+            <svg
+              width="8"
+              height="15"
+              viewBox="0 0 8 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 1.5C3 2.32843 2.32843 3 1.5 3C0.671573 3 0 2.32843 0 1.5C0 0.671573 0.671573 0 1.5 0C2.32843 0 3 0.671573 3 1.5Z"
+                fill="#D9DEE2"
+              />
+              <path
+                d="M8 4.5C8 5.32843 7.32843 6 6.5 6C5.67157 6 5 5.32843 5 4.5C5 3.67157 5.67157 3 6.5 3C7.32843 3 8 3.67157 8 4.5Z"
+                fill="#D9DEE2"
+              />
+              <path
+                d="M3 7.5C3 8.32843 2.32843 9 1.5 9C0.671573 9 0 8.32843 0 7.5C0 6.67157 0.671573 6 1.5 6C2.32843 6 3 6.67157 3 7.5Z"
+                fill="#D9DEE2"
+              />
+              <path
+                d="M8 10.5C8 11.3284 7.32843 12 6.5 12C5.67157 12 5 11.3284 5 10.5C5 9.67157 5.67157 9 6.5 9C7.32843 9 8 9.67157 8 10.5Z"
+                fill="#D9DEE2"
+              />
+              <path
+                d="M3 13.5C3 14.3284 2.32843 15 1.5 15C0.671573 15 0 14.3284 0 13.5C0 12.6716 0.671573 12 1.5 12C2.32843 12 3 12.6716 3 13.5Z"
+                fill="#D9DEE2"
+              />
+            </svg>
+          </motion.div>
+        </div>
       </InputContaner>
     </div>
   );
