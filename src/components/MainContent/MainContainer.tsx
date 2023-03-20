@@ -73,23 +73,23 @@ const AddTasks = styled(motion.button)`
   }
 `;
 
-const DeleteButton = styled(motion.button)`
-  position: absolute;
-  right: 0;
-  opacity: 0;
-  padding: 0 16px;
-  background-color: transparent;
-  border: none;
+// const DeleteButton = styled(motion.button)`
+//   position: absolute;
+//   right: 0;
+//   opacity: 0;
+//   padding: 0 16px;
+//   background-color: transparent;
+//   border: none;
 
-  &:disabled {
-    display: none;
-  }
+//   &:disabled {
+//     display: none;
+//   }
 
-  &:hover svg path {
-    fill: red;
-    transition: fill ease-in 0.3s;
-  }
-`;
+//   &:hover svg path {
+//     fill: red;
+//     transition: fill ease-in 0.3s;
+//   }
+// `;
 
 const MultiInputs = styled(motion.div)`
   display: flex;
@@ -211,16 +211,16 @@ const MainContainer = ({
     });
   };
 
-  const removeEntryFiledVisibility = (index: number) => {
-    setInputFields(
-      inputFields.map((input) => {
-        if (input.id === index) {
-          return { ...input, isVisible: false };
-        }
-        return input;
-      })
-    );
-  };
+  // const removeEntryFiledVisibility = (index: number) => {
+  //   setInputFields(
+  //     inputFields.map((input) => {
+  //       if (input.id === index) {
+  //         return { ...input, isVisible: false };
+  //       }
+  //       return input;
+  //     })
+  //   );
+  // };
 
   useEffect(() => {
     inputFields.map((index) => {
@@ -229,6 +229,7 @@ const MainContainer = ({
           setInputFields(inputFields.filter((i) => i !== index));
         }, 300);
       }
+      return 0;
     });
   }, [inputFields]);
 
@@ -257,29 +258,30 @@ const MainContainer = ({
         }
         setInputHeight(reduseButtonHeight);
       }
+      return 0;
     });
   }, [inputFields]);
 
-  const inputWidthWhileRomove = () => {
-    if (inputFields.length === 2) {
-      setInputHeight(88);
-    }
+  // const inputWidthWhileRomove = () => {
+  //   if (inputFields.length === 2) {
+  //     setInputHeight(88);
+  //   }
 
-    setInputHeight(reduseButtonHeight);
+  //   setInputHeight(reduseButtonHeight);
 
-    if (inputFields.length === 2) {
-      setClicked(false);
-      setTimeout(() => {
-        setInputWidthReverse("100%");
-      }, 800);
-    }
+  //   if (inputFields.length === 2) {
+  //     setClicked(false);
+  //     setTimeout(() => {
+  //       setInputWidthReverse("100%");
+  //     }, 800);
+  //   }
 
-    if (inputFields.length === 2 && textArea.current) {
-      const inputWidth = textArea.current.offsetWidth;
-      const width = String(inputWidth + 52) + "px";
-      setInputWidthReverse(width);
-    }
-  };
+  //   if (inputFields.length === 2 && textArea.current) {
+  //     const inputWidth = textArea.current.offsetWidth;
+  //     const width = String(inputWidth + 52) + "px";
+  //     setInputWidthReverse(width);
+  //   }
+  // };
 
   const handleClick = (entryFieldCallback: () => void) => {
     entryFieldCallback();
@@ -301,15 +303,15 @@ const MainContainer = ({
     }
   };
 
-  const removeInput = (
-    index: number,
-    removeCallback: (index: number) => void
-  ) => {
-    removeCallback(index);
-    removeEntryFiledVisibility(index);
-    setTopPosition(!topPosition);
-    // inputWidthWhileRomove();
-  };
+  // const removeInput = (
+  //   index: number,
+  //   removeCallback: (index: number) => void
+  // ) => {
+  //   removeCallback(index);
+  //   removeEntryFiledVisibility(index);
+  //   setTopPosition(!topPosition);
+  //   // inputWidthWhileRomove();
+  // };
 
   return (
     <FlexWrap>
