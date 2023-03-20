@@ -240,7 +240,7 @@ const MainContainer = ({
   // };
 
   useEffect(() => {
-    setTopPosition(!topPosition);
+    // setTopPosition(!topPosition);
     inputFields.map((index) => {
       if (index.isVisible === false) {
         if (inputFields.length === 2) {
