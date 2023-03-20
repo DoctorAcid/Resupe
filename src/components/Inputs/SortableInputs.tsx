@@ -21,7 +21,6 @@ type Props = {
   topPosition: boolean;
   setTopPosition: React.Dispatch<React.SetStateAction<boolean>>;
   clicked: boolean;
-  setClicked: React.Dispatch<React.SetStateAction<boolean>>;
   // child: React.ReactElement;
 };
 
@@ -40,7 +39,6 @@ const DeleteButton = styled(motion.button)`
   align-items: center;
   width: 24px;
   height: 24px;
-  opacity: 0;
   background-color: transparent;
   border: none;
 
@@ -64,7 +62,6 @@ const SortableInputs: FC<Props> = ({
   topPosition,
   setTopPosition,
   clicked,
-  setClicked,
 }) => {
   const largeInput = useRef<HTMLDivElement>(null);
 
@@ -109,7 +106,6 @@ const SortableInputs: FC<Props> = ({
     callBack(id);
     setInputHeight(reduseButtonHeight);
     setTopPosition(!topPosition);
-    // setClicked(false);
   };
 
   return (
@@ -129,25 +125,21 @@ const SortableInputs: FC<Props> = ({
           }}
           placeholder={"Tasks..."}
         />
-        <div
+        <motion.div
           style={{
             position: "absolute",
             right: 0,
             padding: "0 8px",
             display: "flex",
             gap: "8px",
+            opacity: 0,
+            transition: isVisible ? "all ease-in 1s" : "all ease-in 0.1s",
+          }}
+          animate={{
+            opacity: isVisible ? "1" : "0",
           }}
         >
-          <DeleteButton
-            onClick={() => removeInput(id, removeVisibility)}
-            animate={{
-              opacity: isVisible ? "1" : "0",
-            }}
-            style={{
-              transition: isVisible ? "all ease-in 1.4s" : "all ease-in 0.1s",
-            }}
-            // disabled={submitHandler}
-          >
+          <DeleteButton onClick={() => removeInput(id, removeVisibility)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -163,7 +155,7 @@ const SortableInputs: FC<Props> = ({
             </svg>
           </DeleteButton>
 
-          <motion.div
+          <div
             {...listeners}
             style={{
               width: "24px",
@@ -172,11 +164,6 @@ const SortableInputs: FC<Props> = ({
               justifyContent: "center",
               alignItems: "center",
               cursor: "pointer",
-              zIndex: "6",
-              opacity: 1,
-            }}
-            animate={{
-              opacity: isVisible ? 1 : 0,
             }}
           >
             <svg
@@ -207,8 +194,8 @@ const SortableInputs: FC<Props> = ({
                 fill="#D9DEE2"
               />
             </svg>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </InputContaner>
     </div>
   );

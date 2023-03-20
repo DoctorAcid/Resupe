@@ -404,7 +404,6 @@ const MainContainer = ({
                           inputHeight={inputHeight}
                           setInputHeight={setInputHeight}
                           clicked={clicked}
-                          setClicked={setClicked}
                         />
                       );
                     })}
