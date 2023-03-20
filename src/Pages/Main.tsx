@@ -8,7 +8,6 @@ import "./style.css";
 import { motion } from "framer-motion";
 import ToolTip from "../components/ToolTip";
 import { useWindowSize } from "../custom_hooks/useWindowSize";
-import { stringify } from "querystring";
 
 const Wrap = styled(motion.div)`
   display: flex;
@@ -376,6 +375,7 @@ const Main = () => {
           setEntryInputs(entryInputs.filter((i) => i.id !== entry.id));
         }, 300);
       }
+      return null;
     });
   }, [entryInputs]);
 

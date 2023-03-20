@@ -238,6 +238,7 @@ const MainContainer = ({
           setInputFields(inputFields.filter((i) => i.id !== input.id));
         }, 300);
       }
+      return null;
     });
   }, [inputFields]);
 
@@ -265,6 +266,8 @@ const MainContainer = ({
           }
         }
       }
+
+      return null;
     });
   }, [inputFields]);
 
