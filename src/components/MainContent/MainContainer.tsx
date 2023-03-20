@@ -178,21 +178,25 @@ const MainContainer = ({
   //   return inputHeight - 56;
   // };
 
-  const getNextId = (inputFields: InputItems[]): number => {
+  // const getNextId = (inputFields: InputItems[]): number => {
+  //   let nextId: number = inputFields.length + 1;
+  //   while (inputFields.some((inputFields) => inputFields.id === nextId)) {
+  //     nextId++;
+  //   }
+  //   return nextId;
+  // };
+
+  const addEntryField = () => {
+    // let newID = getNextId(inputFields);
     let nextId: number = inputFields.length + 1;
     while (inputFields.some((inputFields) => inputFields.id === nextId)) {
       nextId++;
     }
-    return nextId;
-  };
-
-  const addEntryField = () => {
-    let newID = getNextId(inputFields);
     setInputFields([
       ...inputFields,
       {
-        id: newID,
-        name: "input" + String(newID),
+        id: nextId,
+        name: "input" + String(nextId),
         isVisible: true,
       },
     ]);
