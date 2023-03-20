@@ -178,7 +178,7 @@ const MainContainer = ({
   //   return inputHeight - 56;
   // };
 
-  const getNextId = (): number => {
+  const getNextId = (inputFields: InputItems[]): number => {
     let nextId: number = inputFields.length + 1;
     while (inputFields.some((inputFields) => inputFields.id === nextId)) {
       nextId++;
@@ -187,7 +187,7 @@ const MainContainer = ({
   };
 
   const addEntryField = () => {
-    let newID = getNextId();
+    let newID = getNextId(inputFields);
     setInputFields([
       ...inputFields,
       {
