@@ -348,15 +348,15 @@ const Main = () => {
   /*---  Entry I/O functions ---*/
 
   const getNextID = () => {
-    let nextID = entryInputs.length + 1;
-    while (entryInputs.some((entryInputs) => entryInputs.id === nextID)) {
+    let nextID: number = entryInputs.length + 1;
+    if (entryInputs.some((entryInputs) => entryInputs.id === nextID)) {
       nextID++;
     }
     return nextID;
   };
 
   const addEntry = () => {
-    let id = getNextID();
+    let id: number = getNextID();
     setEntryInputs([
       ...entryInputs,
       {

@@ -179,15 +179,15 @@ const MainContainer = ({
   // };
 
   const getNextId = (): number => {
-    let nextId = inputFields.length + 1;
-    while (inputFields.some((inputFields) => inputFields.id === nextId)) {
+    let nextId: number = inputFields.length + 1;
+    if (inputFields.some((inputFields) => inputFields.id === nextId)) {
       nextId++;
     }
     return nextId;
   };
 
   const addEntryField = () => {
-    const id = getNextId();
+    const id: number = getNextId();
     setInputFields([
       ...inputFields,
       {
