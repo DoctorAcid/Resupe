@@ -1,6 +1,4 @@
-import { FC, useEffect, useRef } from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { FC } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { LargeInput } from "./inputs";
