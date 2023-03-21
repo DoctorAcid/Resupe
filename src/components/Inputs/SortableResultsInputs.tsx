@@ -3,12 +3,6 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import { LargeInput } from "./inputs";
 
-interface InputItems {
-  id: number;
-  name: string;
-  isVisible: boolean;
-}
-
 type Props = {
   id: number;
   isVisible: boolean;
