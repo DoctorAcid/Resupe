@@ -120,8 +120,9 @@ const SortableInputs: FC<Props> = ({
         transition={{ type: "tween" }}
       >
         <LargeInput
+          className="textArea"
           animate={{
-            padding: isVisible ? "12px 16px" : "0px",
+            padding: isVisible ? "12px 64px 12px 16px" : "0px",
           }}
           placeholder={"Tasks..."}
         />

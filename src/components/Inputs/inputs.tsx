@@ -35,6 +35,7 @@ export const LargeInput = styled(motion.textarea)`
   background-color: #f1f3f3;
   vertical-align: text-top;
   resize: none;
+  line-height: 120%;
   ::placeholder {
     color: #a9adb0;
   }

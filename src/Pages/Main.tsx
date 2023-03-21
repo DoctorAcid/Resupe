@@ -120,8 +120,11 @@ const ContentWrap = styled(motion.div)`
   padding: 128px 0;
   max-width: 100%;
   @media (max-width: 992px) {
-    padding: 64px 0;
+    padding: 104px 0;
   }
+  @media (max-width: 768px) {
+    padding: 64px 0;
+  } ;
 `;
 
 const Content = styled(motion.div)`
@@ -197,13 +200,13 @@ const AddTaskText = styled(Column)`
   width: fit-content;
   transform: rotate(-35deg);
   transition: opacity ease-in 0.3s;
-  @media (max-width: 1200px) {
+  @media (max-width: 992px) {
     right: none;
     left: 24px;
-    top: -24px;
+    top: -64px;
     transform: rotate(15deg);
   }
-  @media (max-width: 992px) {
+  @media (max-width: 768px) {
     display: none;
   }
 `;
@@ -360,7 +363,7 @@ const Main = () => {
       if (!entry.isVisible) {
         setTimeout(() => {
           setEntryInputs(entryInputs.filter((i) => i.id !== entry.id));
-        }, 300);
+        }, 400);
       }
       return null;
     });
@@ -479,7 +482,7 @@ const Main = () => {
                     opacity: index.isVisible ? 1 : 0,
                   }}
                   transition={{
-                    duration: index.isVisible ? 0.8 : 0.3,
+                    duration: index.isVisible ? 0.8 : 0.4,
                   }}
                 >
                   <MainContainer

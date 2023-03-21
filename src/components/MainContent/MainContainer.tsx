@@ -146,7 +146,11 @@ const DateField = styled(Column)`
 
 const ResultsContWrap = styled(motion.div)``;
 
-const ResultsWrap = styled(motion.div)``;
+const ResultsWrap = styled(motion.div)`
+  @media (max-width: 1280px) {
+    margin-top: -256px;
+  }
+`;
 
 const MainContainer = ({
   topPosition,
@@ -283,15 +287,7 @@ const MainContainer = ({
           width: "100%",
           gap: "8px",
           maxWidth: "480px",
-          // border: "2px solid red",
         }}
-        animate={
-          {
-            // gap: clicked ? "24px" : "8px",
-            // maxWidth: submitHandler ? "800px" : maxWidth,
-            // maxWidth: resultsMaxWidth ? resultsMaxWidth : "700px",
-          }
-        }
         transition={{ delay: submitHandler ? 1 : 0 }}
         ref={topSection}
       >
@@ -380,6 +376,9 @@ const MainContainer = ({
               onDragEnd={handleDragEnd}
             >
               <MultiInputs
+                style={{
+                  touchAction: "none",
+                }}
                 animate={{
                   flexDirection: clicked ? "column" : "row",
                 }}
@@ -420,7 +419,7 @@ const MainContainer = ({
                                 padding: "12px 16px",
                               }}
                               placeholder={
-                                "Tasks, responsibilities and achievements..."
+                                "Tasks, responsibilities & achievements"
                               }
                             />
                           </InputContaner>
@@ -463,7 +462,6 @@ const MainContainer = ({
                 animate={{
                   height: inputHeight,
                 }}
-                // disabled={submitHandler}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -510,15 +508,13 @@ const MainContainer = ({
             position: "relative",
             flexWrap: "wrap",
             alignItems: "flex-end",
-            height: "max-content",
             width: "0%",
             overflow: "hidden",
             maxWidth: "480px",
-            // border: "2px solid red",
           }}
           animate={{
             flex: submitHandler ? 1 : 0,
-            // position: submitHandler ? "relative" : "absolute",
+            marginTop: 0,
             width: submitHandler ? "100%" : "0%",
           }}
           transition={{ duration: 1 }}
@@ -527,15 +523,10 @@ const MainContainer = ({
             style={{
               position: "relative",
               display: "flex",
-              // flex: "49%",
-              // marginLeft: "-256px",
-              // scaleX: 0,
               width: "100%",
               opacity: 0,
             }}
             animate={{
-              // marginLeft: submitHandler ? "0px" : "-256px",
-              // scaleX: submitHandler ? 1 : 0,
               opacity: submitHandler ? 1 : 0,
             }}
             transition={{ duration: 1, delay: 1 }}
@@ -544,8 +535,6 @@ const MainContainer = ({
               inputFields={inputFields}
               clicked={clicked}
               inputHeight={inputHeight}
-              // inputWidth={inputWidth}
-              // inputWidthReverse={inputWidthReverse}
             />
           </ResultsContWrap>
         </ResultsWrap>

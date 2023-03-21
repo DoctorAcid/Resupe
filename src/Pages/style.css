@@ -30,6 +30,11 @@
     /* margin-top: 12px; */
 }
 
+.textArea {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
 
 @media (max-width: 992px) {
     .content::before {
