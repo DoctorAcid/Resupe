@@ -40,7 +40,7 @@ const Wrapper = styled.div<{
   width: ${({ width }) => (width ? width : "160px")};
   opacity: ${({ opacity }) =>
     (opacity === "true" && 1) || (opacity === "false" && 0)};
-  @media (max-width: 742px) {
+  @media (max-width: 992px) {
     min-width: fit-content;
     width: fit-content;
     text-align: left;

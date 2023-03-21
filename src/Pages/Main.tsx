@@ -26,14 +26,11 @@ const Wrapper = styled(motion.div)`
   align-items: center;
   height: max-content;
   width: 100%;
-  max-width: 90%;
-  margin-left: -128px;
+  max-width: 82%;
   opacity: 1;
-  @media (max-width: 920px) {
-    margin-left: -64px;
-  }
-
-  @media (max-width: 742px) {
+  margin-left: -160px;
+  @media (max-width: 992px) {
+    max-width: 90%;
     margin-left: 0px;
     .shiftTitle {
       flex-direction: column;
@@ -77,10 +74,22 @@ const LargeButton = styled(motion.button)`
     fill: #fff;
   }
 
-  @media (max-width: 742px) {
+  @media (max-width: 768px) {
     width: 64px;
     height: 64px;
   }
+`;
+
+const Shader = styled.div`
+  width: 100%;
+  height: 96px;
+  position: absolute;
+  align-items: center;
+  left: 0;
+  bottom: 0;
+  padding: 0 64px;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
 `;
 
 const BottomSection = styled(Column)`
@@ -91,14 +100,14 @@ const BottomSection = styled(Column)`
   right: 0;
   padding: 32px;
   z-index: 2;
-  @media (max-width: 1200px) {
+  @media (max-width: 992px) {
     flex-direction: row;
     height: auto;
     width: 100%;
     bottom: 0;
   }
 
-  @media (max-width: 742px) {
+  @media (max-width: 992px) {
     padding: 16px;
   }
 `;
@@ -110,7 +119,7 @@ const ContentWrap = styled(motion.div)`
   align-items: center;
   padding: 128px 0;
   max-width: 100%;
-  @media (max-width: 742px) {
+  @media (max-width: 992px) {
     padding: 64px 0;
   }
 `;
@@ -121,15 +130,10 @@ const Content = styled(motion.div)`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  overflow: hidden;
-  padding-left: 174px;
-  @media (max-width: 742px) {
-    padding-left: 0px;
-  }
 `;
 
 const CurrentContent = styled(motion.div)`
-  @media (max-width: 742px) {
+  @media (max-width: 992px) {
     flex-direction: column;
     justify-content: flex-end;
     gap: 32px;
@@ -144,7 +148,7 @@ const DeleteButton = styled(motion.div)`
   width: 52px;
   height: 100%;
   padding: 12px 16px;
-  left: -128px;
+  left: 54px;
   border: 2px solid #f1f3f3;
   border-radius: 32px;
   transition: all ease-in 0.3s;
@@ -160,7 +164,7 @@ const DeleteButton = styled(motion.div)`
     transition: all ease-in 0.3s;
   }
 
-  @media (max-width: 742px) {
+  @media (max-width: 992px) {
     position: relative;
     width: 100%;
     height: 44px;
@@ -180,7 +184,7 @@ const SubmitTaskText = styled(Column)`
   width: fit-content;
   transform: rotate(15deg);
   transition: opacity ease-in 0.3s;
-  @media (max-width: 742px) {
+  @media (max-width: 992px) {
     display: none;
   }
 `;
@@ -199,7 +203,7 @@ const AddTaskText = styled(Column)`
     top: -24px;
     transform: rotate(15deg);
   }
-  @media (max-width: 742px) {
+  @media (max-width: 992px) {
     display: none;
   }
 `;
@@ -239,29 +243,9 @@ const Main = () => {
   const [popUpOpacity, setPopUpOpacity] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [topPosition, setTopPosition] = useState(false);
-  const [resultsContPad, setResultsContPad] = useState("");
   const [toolTipContent, setToolTipContent] = useState("");
   const [toolTipOpacity, setToolTipOpacity] = useState(false);
-  const [primaryResultsContWidth, setPrimaryResultsContWidth] =
-    useState("512px");
-  const [resultsContWidth, setResultsContWidth] = useState("512px");
   const [width, height] = useWindowSize();
-
-  useEffect(() => {
-    if (width < 1419) {
-      setResultsContWidth("565px");
-      setPrimaryResultsContWidth("");
-      setResultsContPad("174px");
-    }
-    if (width < 742) {
-      setResultsContPad("0px");
-    }
-    if (width > 1418) {
-      setResultsContWidth("512px");
-      setPrimaryResultsContWidth("512px");
-      setResultsContPad("0px");
-    }
-  }, [width]);
 
   useEffect(() => {
     if (mainWrap.current) {
@@ -279,7 +263,7 @@ const Main = () => {
         } else setTopPosition(false);
       }
     }
-  }, [clicked, reRender, height]);
+  }, [clicked, reRender, height, width]);
 
   useEffect(() => {
     if (entryInputs.length > 1) {
@@ -453,8 +437,6 @@ const Main = () => {
                     setToolTipContent={setToolTipContent}
                     setToolTipOpacity={setToolTipOpacity}
                     toolTipOpacity={toolTipOpacity}
-                    resultsContPad={resultsContPad}
-                    resultsContWidth={primaryResultsContWidth}
                   />
                 </Content>
               );
@@ -469,6 +451,7 @@ const Main = () => {
                   opacity: 0,
                   paddingTop: "0px",
                   paddingBottom: "0px",
+                  overflow: "hidden",
                 }}
                 animate={{
                   paddingTop: index.isVisible ? "48px" : "0px",
@@ -508,8 +491,6 @@ const Main = () => {
                     setToolTipContent={setToolTipContent}
                     setToolTipOpacity={setToolTipOpacity}
                     toolTipOpacity={toolTipOpacity}
-                    resultsMaxWidth={"562px"}
-                    resultsContWidth={resultsContWidth}
                   />
                   <DeleteButton onClick={() => handleRemove(index.id)}>
                     <svg
@@ -665,6 +646,7 @@ const Main = () => {
           </svg>
         </LargeButton>
       </BottomSection>
+      <Shader />
 
       <Popup animate={{ opacity: popUpOpacity ? "1" : "0" }}>
         <svg

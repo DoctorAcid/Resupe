@@ -30,9 +30,6 @@ interface Props {
   titleSection: boolean;
   setToolTipContent: React.Dispatch<React.SetStateAction<string>>;
   setToolTipOpacity: React.Dispatch<React.SetStateAction<boolean>>;
-  resultsContPad?: string;
-  resultsMaxWidth?: string;
-  resultsContWidth?: string;
 }
 
 const AddTasks = styled(motion.button)`
@@ -108,10 +105,10 @@ const InputContaner = styled(motion.div)`
   opacity: 1;
 `;
 
-const TopSection = styled(Column)`
-  flex: 49%;
-  gap: 8px;
-  max-width: 800px;
+const TopSection = styled(motion.div)`
+  // flex: 49%;
+  // gap: 8px;
+  // max-width: 800px;
   // border: 2px solid red;
 `;
 
@@ -122,8 +119,28 @@ const FlexWrap = styled(motion.div)`
   width: 100%;
   align-items: flex-end;
   justify-content: center;
-  @media (max-width: 1418px) {
+  padding-left: 160px;
+  @media (max-width: 1280px) {
     flex-direction: column;
+  }
+  @media (max-width: 992px) {
+    padding-left: 0px;
+  }
+`;
+
+const TitleWrap = styled(motion.div)`
+  position: absolute;
+  left: -176px;
+  @media (max-width: 992px) {
+    position: relative;
+    left: 0;
+  }
+`;
+
+const DateField = styled(Column)`
+  max-width: 149px;
+  @media (max-width: 464px) {
+    max-width: 100%;
   }
 `;
 
@@ -140,9 +157,6 @@ const MainContainer = ({
   setToolTipContent,
   setToolTipOpacity,
   titleSection,
-  resultsContPad,
-  resultsMaxWidth,
-  resultsContWidth,
 }: Props) => {
   const textArea = useRef<HTMLDivElement>(null);
   const largeInput = useRef<HTMLDivElement>(null);
@@ -262,32 +276,50 @@ const MainContainer = ({
   return (
     <FlexWrap>
       <TopSection
-        animate={{
-          // gap: clicked ? "24px" : "8px",
-          // maxWidth: submitHandler ? "800px" : maxWidth,
-          maxWidth: resultsMaxWidth ? resultsMaxWidth : "800px",
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          width: "100%",
+          gap: "8px",
+          maxWidth: "480px",
+          // border: "2px solid red",
         }}
+        animate={
+          {
+            // gap: clicked ? "24px" : "8px",
+            // maxWidth: submitHandler ? "800px" : maxWidth,
+            // maxWidth: resultsMaxWidth ? resultsMaxWidth : "700px",
+          }
+        }
         transition={{ delay: submitHandler ? 1 : 0 }}
         ref={topSection}
       >
         <Row gap="sm" justify="fe" align="fe" style={{ flexWrap: "wrap" }}>
-          <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
+          <Row
+            className="shiftTitle"
+            align="fs"
+            gap="md"
+            style={{ flex: "1", position: "relative" }}
+          >
             {titleSection ? (
-              <TitleTag
-                justify="fe"
-                title="Job Lists"
-                titleOpacity={titleOpacity}
-                tooltip="Just or nothing to say I wrote this text!"
-                setToolTip={setToolTip}
-                setToolTipOpacity={setToolTipOpacity}
-                toolTipOpacity={toolTipOpacity}
-              />
+              <TitleWrap>
+                <TitleTag
+                  justify="fe"
+                  title="Job Lists"
+                  titleOpacity={titleOpacity}
+                  tooltip="Just or nothing to say I wrote this text!"
+                  setToolTip={setToolTip}
+                  setToolTipOpacity={setToolTipOpacity}
+                  toolTipOpacity={toolTipOpacity}
+                />
+              </TitleWrap>
             ) : null}
             <Input placeholder="Your job title..." />
           </Row>
 
           <Row gap="sm" style={{ flex: "1" }}>
-            <Column gap="sm">
+            <DateField gap="sm">
               {titleSection ? (
                 <TitleTag
                   title="Start Date"
@@ -300,9 +332,9 @@ const MainContainer = ({
                 />
               ) : null}
               <Input type={"date"} placeholder="__/__/___" />
-            </Column>
+            </DateField>
 
-            <Column gap="sm">
+            <DateField gap="sm">
               {titleSection ? (
                 <TitleTag
                   title="End Date"
@@ -319,21 +351,23 @@ const MainContainer = ({
                 type={"date"}
                 placeholder="__/__/___"
               />
-            </Column>
+            </DateField>
           </Row>
         </Row>
 
         <Row className="shiftTitle" align="fs" justify="c" gap="md">
           {titleSection ? (
-            <TitleTag
-              align="fs"
-              title="Tasks, Responsibilities,& Achievements"
-              titleOpacity={titleOpacity}
-              tooltip="Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!"
-              setToolTip={setToolTip}
-              setToolTipOpacity={setToolTipOpacity}
-              toolTipOpacity={toolTipOpacity}
-            />
+            <TitleWrap>
+              <TitleTag
+                align="fs"
+                title="Tasks, Responsibilities,& Achievements"
+                titleOpacity={titleOpacity}
+                tooltip="Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!Just or nothing to say I wrote this text!"
+                setToolTip={setToolTip}
+                setToolTipOpacity={setToolTipOpacity}
+                toolTipOpacity={toolTipOpacity}
+              />
+            </TitleWrap>
           ) : null}
           <Row
             gap="sm"
@@ -451,221 +485,70 @@ const MainContainer = ({
 
         <Row className="shiftTitle" align="fs" gap="md" style={{ flex: "1" }}>
           {titleSection ? (
-            <TitleTag
-              align="fs"
-              justify="fe"
-              title="A Broad Sentence Describing The Role"
-              titleOpacity={titleOpacity}
-              tooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-              setToolTip={setToolTip}
-              setToolTipOpacity={setToolTipOpacity}
-              toolTipOpacity={toolTipOpacity}
-            />
+            <TitleWrap>
+              <TitleTag
+                align="fs"
+                justify="fe"
+                title="A Broad Sentence Describing The Role"
+                titleOpacity={titleOpacity}
+                tooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                setToolTip={setToolTip}
+                setToolTipOpacity={setToolTipOpacity}
+                toolTipOpacity={toolTipOpacity}
+              />
+            </TitleWrap>
           ) : null}
           <Input placeholder="Brief statment of your role" />
         </Row>
       </TopSection>
 
       {submitHandler ? (
-        <>
-          {/* {resultsColumnDiv ? (
-            <motion.div
-              style={{
-                position: "relative",
-                bottom: "0px",
-                width: resultsContWidth,
-                borderRadius: "2px",
-                height: "0px",
-                opacity: 1,
-                zIndex: -1,
-              }}
-              animate={{
-                width: submitHandler ? "400px" : resultsContWidth,
-                opacity: submitHandler ? 0 : 1,
-                display: submitHandler ? "none" : "flex",
-              }}
-              transition={{ delay: 1 }}
-            >
-              <motion.div
-                style={{ opacity: 0, marginTop: "-128px" }}
-                animate={{
-                  opacity: submitHandler ? 1 : 0,
-                  marginTop: submitHandler ? "0px" : "-128px",
-                }}
-              >
-                <Column gap="sm" animate={{ gap: clicked ? "24px" : "8px" }}>
-                  <div
-                    style={{
-                      width: "4px",
-                      height: "48px",
-                      borderRadius: "2px",
-                      backgroundColor: "#d9dee2",
-                    }}
-                  />
-                  <Column gap="sm">
-                    {inputFields.map((items, index) => {
-                      if (items.id === 1) {
-                        return (
-                          <div
-                            key={index}
-                            style={{
-                              width: "4px",
-                              height: clicked ? "48px" : "104px",
-                              borderRadius: "2px",
-                              backgroundColor: "#d9dee2",
-                            }}
-                          />
-                        );
-                      }
-                      return (
-                        <div
-                          key={index}
-                          style={{
-                            width: "4px",
-                            height: "48px",
-                            borderRadius: "2px",
-                            backgroundColor: "#d9dee2",
-                          }}
-                        />
-                      );
-                    })}
-                  </Column>
-                  <div
-                    style={{
-                      width: "4px",
-                      height: "48px",
-                      borderRadius: "2px",
-                      backgroundColor: "#d9dee2",
-                    }}
-                  />
-                </Column>
-              </motion.div>
-            </motion.div>
-          ) : (
-            <motion.div
-              style={{
-                position: "relative",
-                right: "0",
-                width: "0px",
-                borderRadius: "2px",
-                // height: "216px",
-                opacity: 1,
-                zIndex: -1,
-              }}
-              animate={{
-                opacity: submitHandler ? 0 : 1,
-                display: submitHandler ? "none" : "flex",
-              }}
-              transition={{ delay: 1 }}
-            >
-              <motion.div
-                style={{ opacity: 0, marginLeft: "-24px" }}
-                animate={{
-                  opacity: submitHandler ? 1 : 0,
-                  marginLeft: submitHandler ? "0px" : "-24px",
-                }}
-              >
-                <Column gap="sm" animate={{ gap: clicked ? "24px" : "8px" }}>
-                  <div
-                    style={{
-                      width: "4px",
-                      height: "48px",
-                      borderRadius: "2px",
-                      backgroundColor: "#d9dee2",
-                    }}
-                  />
-                  <Column gap="sm">
-                    {inputFields.map((items, index) => {
-                      if (items.id === 1) {
-                        return (
-                          <div
-                            key={index}
-                            style={{
-                              width: "4px",
-                              height: clicked ? "48px" : "104px",
-                              borderRadius: "2px",
-                              backgroundColor: "#d9dee2",
-                            }}
-                          />
-                        );
-                      }
-                      return (
-                        <div
-                          key={index}
-                          style={{
-                            width: "4px",
-                            height: "48px",
-                            borderRadius: "2px",
-                            backgroundColor: "#d9dee2",
-                          }}
-                        />
-                      );
-                    })}
-                  </Column>
-                  <div
-                    style={{
-                      width: "4px",
-                      height: "48px",
-                      borderRadius: "2px",
-                      backgroundColor: "#d9dee2",
-                    }}
-                  />
-                </Column>
-              </motion.div>
-            </motion.div>
-          )} */}
-
-          {/* <div
-            style={{ border: "2px solid red", width: "100%", flex: "1" }}
-          ></div> */}
-
-          <ResultsWrap
+        <ResultsWrap
+          style={{
+            display: "flex",
+            flex: 0,
+            position: "relative",
+            flexWrap: "wrap",
+            alignItems: "flex-end",
+            height: "max-content",
+            width: "0%",
+            overflow: "hidden",
+            maxWidth: "480px",
+            // border: "2px solid red",
+          }}
+          animate={{
+            flex: submitHandler ? 1 : 0,
+            // position: submitHandler ? "relative" : "absolute",
+            width: submitHandler ? "100%" : "0%",
+          }}
+          transition={{ duration: 1 }}
+        >
+          <ResultsContWrap
             style={{
+              position: "relative",
               display: "flex",
               // flex: "49%",
-              position: "relative",
-              flexWrap: "wrap",
-              alignItems: "flex-end",
-              height: "max-content",
-              width: "0%",
-              overflow: "hidden",
-              paddingLeft: resultsContPad ? resultsContPad : "0px",
-              maxWidth: resultsContWidth,
-              // border: "2px solid red",
+              // marginLeft: "-256px",
+              // scaleX: 0,
+              width: "100%",
+              opacity: 0,
             }}
             animate={{
-              // position: submitHandler ? "relative" : "absolute",
-              width: submitHandler ? "100%" : "0%",
+              // marginLeft: submitHandler ? "0px" : "-256px",
+              // scaleX: submitHandler ? 1 : 0,
+              opacity: submitHandler ? 1 : 0,
             }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1, delay: 1 }}
           >
-            <ResultsContWrap
-              style={{
-                position: "relative",
-                display: "flex",
-                // flex: "49%",
-                // marginLeft: "-256px",
-                // scaleX: 0,
-                width: "100%",
-                opacity: 0,
-              }}
-              animate={{
-                // marginLeft: submitHandler ? "0px" : "-256px",
-                // scaleX: submitHandler ? 1 : 0,
-                opacity: submitHandler ? 1 : 0,
-              }}
-              transition={{ duration: 1, delay: 1 }}
-            >
-              <ResultsContainer
-                inputFields={inputFields}
-                clicked={clicked}
-                inputHeight={inputHeight}
-                // inputWidth={inputWidth}
-                // inputWidthReverse={inputWidthReverse}
-              />
-            </ResultsContWrap>
-          </ResultsWrap>
-        </>
+            <ResultsContainer
+              inputFields={inputFields}
+              clicked={clicked}
+              inputHeight={inputHeight}
+              // inputWidth={inputWidth}
+              // inputWidthReverse={inputWidthReverse}
+            />
+          </ResultsContWrap>
+        </ResultsWrap>
       ) : null}
     </FlexWrap>
   );
