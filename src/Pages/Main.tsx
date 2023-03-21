@@ -84,10 +84,8 @@ const Shader = styled.div`
   width: 100%;
   height: 96px;
   position: absolute;
-  align-items: center;
   left: 0;
   bottom: 0;
-  padding: 0 64px;
   z-index: 1;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
 `;

@@ -5,6 +5,16 @@ import { Row } from "../Containers/Row";
 import { Input, LargeInput } from "../Inputs/inputs";
 import { motion } from "framer-motion";
 import { useWindowSize } from "../../custom_hooks/useWindowSize";
+import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import SortableInputs from "../Inputs/SortableInputs";
+import SortableResultsInputs from "../Inputs/SortableResultsInputs";
 
 interface InputItems {
   id: number;
@@ -159,92 +169,104 @@ const MainContainer = ({ inputFields, clicked, inputHeight }: Props) => {
             justifyContent: clicked ? "flex-start" : "center",
           }}
         >
-          <MultiInputs
-            animate={{
-              flexDirection: clicked ? "column" : "row",
-            }}
-            transition={{ delay: clicked ? 0 : 0.6 }}
-          >
-            <motion.div
-              style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
+          <DndContext collisionDetection={closestCenter}>
+            <MultiInputs
+              animate={{
+                flexDirection: clicked ? "column" : "row",
               }}
-              animate={
-                {
-                  // width: clicked ? inputWidth : inputWidthReverse,
-                }
-              }
+              transition={{ delay: clicked ? 0 : 0.6 }}
             >
-              {inputFields.map((index, i) => {
-                if (index.id === 1) {
-                  return (
-                    <InputContaner
-                      key={index.id}
-                      animate={{
-                        height: clicked ? "48px" : "104px",
-                      }}
-                      style={{
-                        height: "104px",
-                        width: "100%",
-                      }}
-                    >
-                      <LargeInput
-                        style={{
-                          padding: "12px 16px",
-                        }}
-                        placeholder={
-                          "Tasks, responsibilities and achievements..."
-                        }
+              <SortableContext
+                items={inputFields}
+                strategy={verticalListSortingStrategy}
+              >
+                <motion.div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                  animate={
+                    {
+                      // width: clicked ? inputWidth : inputWidthReverse,
+                    }
+                  }
+                >
+                  {inputFields.map((index, i) => {
+                    if (index.id === 1) {
+                      return (
+                        <InputContaner
+                          key={index.id}
+                          animate={{
+                            height: clicked ? "48px" : "104px",
+                          }}
+                          style={{
+                            height: "104px",
+                            width: "100%",
+                          }}
+                        >
+                          <LargeInput
+                            style={{
+                              padding: "12px 16px",
+                            }}
+                            placeholder={
+                              "Tasks, responsibilities & achievements"
+                            }
+                          />
+                        </InputContaner>
+                      );
+                    }
+                    return (
+                      <SortableResultsInputs
+                        id={index.id}
+                        isVisible={index.isVisible}
+                        key={index.id}
                       />
-                    </InputContaner>
-                  );
-                }
-                return (
-                  <InputContaner
-                    className="input"
-                    animate={{
-                      width: index.isVisible ? "100%" : "0%",
-                      height: index.isVisible ? "48px" : "0px",
-                    }}
-                    transition={{ type: "tween" }}
-                    key={index.id}
-                  >
-                    <LargeInput
-                      animate={{
-                        padding: index.isVisible ? "12px 16px" : "0px",
-                      }}
-                      placeholder={"Tasks..."}
-                    />
+                      // <InputContaner
+                      //   className="input"
+                      //   animate={{
+                      //     width: index.isVisible ? "100%" : "0%",
+                      //     height: index.isVisible ? "48px" : "0px",
+                      //   }}
+                      //   transition={{ type: "tween" }}
+                      //   key={index.id}
+                      // >
+                      //   <LargeInput
+                      //     animate={{
+                      //       padding: index.isVisible ? "12px 16px" : "0px",
+                      //     }}
+                      //     placeholder={"Tasks..."}
+                      //   />
 
-                    <ReloadButton
-                      style={{ opacity: 0 }}
-                      animate={{ opacity: index.isVisible ? 1 : 0 }}
-                    >
-                      <svg
-                        id="Component_12_1"
-                        data-name="Component 12 – 1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="15"
-                        viewBox="0 0 20 15"
-                      >
-                        <path
-                          id="Union_13"
-                          data-name="Union 13"
-                          d="M6.169,17.447A7.556,7.556,0,0,1,6.139,2.6V0L8.865,2.6a7.556,7.556,0,0,1-.017,14.846V20Zm-4.5-7.428a5.871,5.871,0,0,0,4.559,5.728l2.622-2.5V15.73A5.878,5.878,0,0,0,8.731,4.281L6.139,6.751V4.311A5.872,5.872,0,0,0,1.667,10.019Z"
-                          transform="translate(20) rotate(90)"
-                          fill="#d9dee2"
-                        />
-                      </svg>
-                    </ReloadButton>
-                  </InputContaner>
-                );
-              })}
-            </motion.div>
-          </MultiInputs>
+                      //   <ReloadButton
+                      //     style={{ opacity: 0 }}
+                      //     animate={{ opacity: index.isVisible ? 1 : 0 }}
+                      //   >
+                      //     <svg
+                      //       id="Component_12_1"
+                      //       data-name="Component 12 – 1"
+                      //       xmlns="http://www.w3.org/2000/svg"
+                      //       width="20"
+                      //       height="15"
+                      //       viewBox="0 0 20 15"
+                      //     >
+                      //       <path
+                      //         id="Union_13"
+                      //         data-name="Union 13"
+                      //         d="M6.169,17.447A7.556,7.556,0,0,1,6.139,2.6V0L8.865,2.6a7.556,7.556,0,0,1-.017,14.846V20Zm-4.5-7.428a5.871,5.871,0,0,0,4.559,5.728l2.622-2.5V15.73A5.878,5.878,0,0,0,8.731,4.281L6.139,6.751V4.311A5.872,5.872,0,0,0,1.667,10.019Z"
+                      //         transform="translate(20) rotate(90)"
+                      //         fill="#d9dee2"
+                      //       />
+                      //     </svg>
+                      //   </ReloadButton>
+                      // </InputContaner>
+                    );
+                  })}
+                </motion.div>
+              </SortableContext>
+            </MultiInputs>
+          </DndContext>
           {clicked ? (
             <ReloadButton>
               <svg

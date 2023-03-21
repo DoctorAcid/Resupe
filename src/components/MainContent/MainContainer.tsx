@@ -139,7 +139,7 @@ const TitleWrap = styled(motion.div)`
 
 const DateField = styled(Column)`
   max-width: 149px;
-  @media (max-width: 464px) {
+  @media (max-width: 468px) {
     max-width: 100%;
   }
 `;
@@ -277,6 +277,7 @@ const MainContainer = ({
     }
   };
 
+  // console.log(JSON.stringify(inputFields));
   return (
     <FlexWrap>
       <TopSection
