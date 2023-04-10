@@ -120,10 +120,12 @@ const SortableInputs: FC<Props> = ({
         style={{
           width: inputCount === 1 ? "100%" : "0%",
           height: inputCount === 1 ? "104px" : "0px",
+          opacity: 0,
         }}
         animate={{
           width: isVisible ? "100%" : "0%",
           height: isVisible ? (inputCount === 1 ? "104px" : "48px") : "0px",
+          opacity: isVisible ? 1 : 0,
           // height: "100%",
         }}
         transition={{ type: "tween" }}
