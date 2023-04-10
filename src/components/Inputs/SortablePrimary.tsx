@@ -21,7 +21,7 @@ type Props = {
   topPosition: boolean;
   setTopPosition: React.Dispatch<React.SetStateAction<boolean>>;
   clicked: boolean;
-  placeholder: string; // child: React.ReactElement;
+  // child: React.ReactElement;
 };
 
 const InputContaner = styled(motion.div)`
@@ -52,7 +52,7 @@ const DeleteButton = styled(motion.button)`
   }
 `;
 
-const SortableInputs: FC<Props> = ({
+const SortablePrimary: FC<Props> = ({
   id,
   isVisible,
   inputFields,
@@ -62,11 +62,9 @@ const SortableInputs: FC<Props> = ({
   topPosition,
   setTopPosition,
   clicked,
-  placeholder,
 }) => {
   const largeInput = useRef<HTMLDivElement>(null);
 
-  let inputCount: number = inputFields.length;
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -76,7 +74,7 @@ const SortableInputs: FC<Props> = ({
     position: "relative",
     width: "100%",
     height: "100%",
-    overflow: "hidden",
+    // border: "2px solid red",
   };
 
   useEffect(() => {
@@ -88,7 +86,7 @@ const SortableInputs: FC<Props> = ({
   }, [clicked]);
 
   const reduseButtonHeight = () => {
-    if (inputCount === 2) {
+    if (inputFields.length === 2) {
       setInputHeight(88);
       return inputHeight;
     }
@@ -117,30 +115,19 @@ const SortableInputs: FC<Props> = ({
       <InputContaner
         className="input"
         ref={largeInput}
-        style={{
-          width: inputCount === 1 ? "100%" : "0%",
-          height: inputCount === 1 ? "104px" : "0px",
-        }}
         animate={{
-          width: isVisible ? "100%" : "0%",
-          height: isVisible ? (inputCount === 1 ? "104px" : "48px") : "0px",
-          // height: "100%",
+          width: inputFields.length === 2 ? "100%" : isVisible ? "100%" : "0%",
+          //   height: isVisible ? (inputFields.length === 1 ? "104px" : "48px") : "0px"
+          height: "max-content",
         }}
         transition={{ type: "tween" }}
       >
         <LargeInput
           className="textArea"
-          style={{
-            padding: "12px 64px 12px 16px",
-          }}
           animate={{
             padding: isVisible ? "12px 64px 12px 16px" : "0px",
           }}
-          placeholder={
-            inputCount > 1
-              ? "Tasks..."
-              : "Tasks, responsibilities & achievements"
-          }
+          placeholder={"Tasks..."}
         />
         <motion.div
           style={{
@@ -150,12 +137,11 @@ const SortableInputs: FC<Props> = ({
             display: "flex",
             gap: "4px",
             opacity: 0,
-            // transition: isVisible ? "all ease-in 1s" : "all ease-in 0.1s",
+            transition: isVisible ? "all ease-in 1s" : "all ease-in 0.1s",
           }}
           animate={{
-            opacity: isVisible ? (inputCount > 1 ? "1" : "0") : "0",
+            opacity: isVisible ? "1" : "0",
           }}
-          // transition={{ duration: isVisible ? 3 : 0.3 }}
         >
           <DeleteButton onClick={() => removeInput(id, removeVisibility)}>
             <svg
@@ -219,4 +205,4 @@ const SortableInputs: FC<Props> = ({
   );
 };
 
-export default SortableInputs;
+export default SortablePrimary;

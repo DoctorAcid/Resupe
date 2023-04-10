@@ -13,6 +13,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { isVisible } from "@testing-library/user-event/dist/utils";
 // import { useWindowSize } from "../../custom_hooks/useWindowSize";
 
 interface InputItems {
@@ -277,7 +278,6 @@ const MainContainer = ({
     }
   };
 
-  // console.log(JSON.stringify(inputFields));
   return (
     <FlexWrap>
       <TopSection
@@ -396,37 +396,27 @@ const MainContainer = ({
                       display: "flex",
                       flexDirection: "column",
                       gap: "8px",
+                      minHeight: "104px",
+                      // border: "2px solid red",
                     }}
                     animate={{
                       width: clicked ? inputWidth : inputWidthReverse,
                     }}
                   >
                     {inputFields.map((index) => {
-                      if (index.id === 1) {
-                        return (
-                          <InputContaner
-                            ref={largeInput}
-                            key={index.id}
-                            animate={{
-                              height: clicked ? "48px" : "104px",
-                            }}
-                            style={{
-                              height: "104px",
-                              width: "100%",
-                            }}
-                          >
-                            <LargeInput
-                              style={{
-                                padding: "12px 16px",
-                              }}
-                              placeholder={
-                                "Tasks, responsibilities & achievements"
-                              }
-                            />
-                          </InputContaner>
-                        );
-                      }
+                      // if (inputFields.length > 1) {
                       return (
+                        // <InputContaner
+                        //   ref={largeInput}
+                        //   key={index.id}
+                        //   style={{
+                        //     height: "0px",
+                        //     width: "100%",
+                        //   }}
+                        //   animate={{
+                        //     height: index.isVisible ? "48px" : "0px",
+                        //   }}
+                        // >
                         <SortableInputs
                           id={index.id}
                           key={index.id}
@@ -438,8 +428,36 @@ const MainContainer = ({
                           inputHeight={inputHeight}
                           setInputHeight={setInputHeight}
                           clicked={clicked}
+                          placeholder="Tasks..."
                         />
+                        // </InputContaner>
                       );
+                      // }
+                      // return (
+                      //   <InputContaner
+                      //     ref={largeInput}
+                      //     key={index.id}
+                      //     style={{
+                      //       height: "104px",
+                      //       width: "100%",
+                      //       border: "2px solid red",
+                      //     }}
+                      //   >
+                      //     <SortableInputs
+                      //       id={index.id}
+                      //       // key={index.id}
+                      //       isVisible={index.isVisible}
+                      //       inputFields={inputFields}
+                      //       setInputFields={setInputFields}
+                      //       topPosition={topPosition}
+                      //       setTopPosition={setTopPosition}
+                      //       inputHeight={inputHeight}
+                      //       setInputHeight={setInputHeight}
+                      //       clicked={clicked}
+                      //       placeholder="Tasks, responsibilities & achievements"
+                      //     />
+                      //   </InputContaner>
+                      // );
                     })}
                   </motion.div>
                 </SortableContext>
@@ -463,6 +481,7 @@ const MainContainer = ({
                 animate={{
                   height: inputHeight,
                 }}
+                transition={{ type: "tween" }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

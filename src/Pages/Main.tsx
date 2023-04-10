@@ -414,8 +414,6 @@ const Main = () => {
       }}
       transition={{ duration: 2 }}
     >
-      <NavBar />
-
       <Wrapper ref={mainWrap}>
         <ContentWrap>
           {entryInputs.map((index, i) => {
