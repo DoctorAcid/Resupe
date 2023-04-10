@@ -4,7 +4,6 @@ import { Column } from "../Containers/Column";
 import { Row } from "../Containers/Row";
 import { Input, LargeInput } from "../Inputs/inputs";
 import { motion } from "framer-motion";
-import SortableResultsInputs from "../Inputs/SortableResultsInputs";
 
 interface InputItems {
   id: number;
@@ -17,30 +16,6 @@ interface Props {
   clicked: boolean;
   inputHeight: number;
 }
-
-const ReloadTask = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-  border: 2px solid #d9dee2;
-  background-color: #fff;
-  border-radius: 24px;
-  height: 88px;
-  width: 44px;
-  transition: box-shadow ease-in 0.3s;
-  &:hover {
-    transition: border ease-in 0.3s;
-    border: 2px solid #6d7378;
-    box-shadow: 8px 8px 40px 0px #0000000d;
-  }
-
-  &:hover svg path {
-    transition: all ease-in 0.3s;
-    fill: #6d7378;
-  }
-`;
 
 const MultiInputs = styled(motion.div)`
   display: flex;

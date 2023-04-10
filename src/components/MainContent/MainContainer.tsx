@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Column } from "../Containers/Column";
 import { Row } from "../Containers/Row";
-import { Input, LargeInput } from "../Inputs/inputs";
+import { Input } from "../Inputs/inputs";
 import SortableInputs from "../Inputs/SortableInputs";
 import TitleTag from "../TitleTag/TitleTag";
 import { motion } from "framer-motion";
@@ -13,8 +13,6 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { isVisible } from "@testing-library/user-event/dist/utils";
-// import { useWindowSize } from "../../custom_hooks/useWindowSize";
 
 interface InputItems {
   id: number;
@@ -97,15 +95,6 @@ const MultiInputs = styled(motion.div)`
   width: 100%;
 `;
 
-const InputContaner = styled(motion.div)`
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 0;
-  height: 0;
-  opacity: 1;
-`;
-
 const TopSection = styled(motion.div)`
   // flex: 49%;
   // gap: 8px;
@@ -164,7 +153,6 @@ const MainContainer = ({
   titleSection,
 }: Props) => {
   const textArea = useRef<HTMLDivElement>(null);
-  const largeInput = useRef<HTMLDivElement>(null);
   const topSection = useRef<HTMLDivElement>(null);
   const [inputFields, setInputFields] = useState<InputItems[]>([
     { id: 1, name: "input1", isVisible: true },

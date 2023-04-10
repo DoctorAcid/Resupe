@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Column } from "../components/Containers/Column";
 import { Row } from "../components/Containers/Row";
 import MainContainer from "../components/MainContent/MainContainer";
-import NavBar from "../components/NavBar/NavBar";
 import "./style.css";
 import { motion } from "framer-motion";
 import ToolTip from "../components/ToolTip";
