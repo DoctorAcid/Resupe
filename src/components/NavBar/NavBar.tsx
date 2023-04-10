@@ -24,6 +24,10 @@ const NavWrap = styled.div`
   }
 `;
 
+const H2 = styled.h2`
+  font-size: 24px;
+`;
+
 const NavBar = () => {
   return (
     <NavWrap>
@@ -51,7 +55,7 @@ const NavBar = () => {
             />
           </svg>
         </>
-        <h1>supe</h1>
+        <H2>supe</H2>
       </Link>
     </NavWrap>
   );
